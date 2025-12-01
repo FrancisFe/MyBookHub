@@ -8,7 +8,7 @@ namespace BibliotecaDevlights.Data.Repositories.Interfaces
     public interface ICartRepository
     {
         Task<Cart?> GetCartByUserIdAsync(int userId);
-        Task<Cart> CreateCartAsync(int userId);
+        Task<Cart> CreateCartAsync(Cart cart);
         Task ClearCartAsync(int userId);
 
         // ===== CART ITEMS =====

@@ -84,7 +84,7 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
             var books = await _context.Books.AsNoTracking()
                 .Include(a => a.Author)
                 .Include(c => c.Category)
-                .ToListAsync(); // Traer datos a memoria ANTES de aplicar filtros complejos
+                .ToListAsync();
 
             return books
                 .Where(b => b.Title.ToLower().Contains(lowerSearchTerm) ||
