@@ -68,19 +68,21 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
-        b => b.MigrationsAssembly("BibliotecaDevlights.API")));
+        b => b.MigrationsAssembly("BibliotecaDevlights.Data")));
 
 //Repositories
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 
 //Services
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 builder.Services.AddAutoMapper(cfg =>
 {
@@ -88,6 +90,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<BookProfile>();
     cfg.AddProfile<CategoryProfile>();
     cfg.AddProfile<UserProfile>();
+    cfg.AddProfile<CartProfile>();
 });
 
 var app = builder.Build();

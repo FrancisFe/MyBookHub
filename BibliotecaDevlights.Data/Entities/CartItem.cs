@@ -11,7 +11,7 @@ namespace BibliotecaDevlights.Data.Entities
         public int BookId { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }
-        public Cart Cart { get; set; } = new Cart();
+        public Cart Cart { get; set; } = null!;
         public Book? Book
         {
             get; set;

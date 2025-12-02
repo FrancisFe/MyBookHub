@@ -19,8 +19,6 @@ namespace BibliotecaDevlights.Business.DTOs.Auth
         [Required(ErrorMessage = "Password es requerido")]
         [StringLength(100, MinimumLength = 8,
             ErrorMessage = "Password mínimo 8 caracteres")]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)",
-            ErrorMessage = "Password debe tener mayúscula, minúscula y número")]
         public string Password { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Confirmar password es requerido")]

@@ -61,7 +61,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
 
         public async Task<UserDto?> RegisterAsync(RegisterDto request)
         {
-            if (await _userRepository.EmailExistAsync(request.Email) || 
+            if (await _userRepository.EmailExistAsync(request.Email) ||
                 await _userRepository.UserNameExistAsync(request.UserName))
             {
                 return null;

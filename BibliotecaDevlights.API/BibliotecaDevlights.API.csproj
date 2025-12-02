@@ -68,7 +68,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BibliotecaDevlights.Business\BibliotecaDevlights.Business.csproj" />
-    <ProjectReference Include="..\BibliotecaDevlights.Data\BibliotecaDevlights.Data.csproj" />
   </ItemGroup>
 
 </Project>

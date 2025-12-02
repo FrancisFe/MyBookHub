@@ -16,7 +16,11 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
         //Carts
         public async Task<Cart?> GetCartByUserIdAsync(int userId)
         {
-           return await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
+            return await _context.Carts
+       .Include(c => c.CartItems!)
+           .ThenInclude(ci => ci.Book)
+               .ThenInclude(b => b!.Author)
+       .FirstOrDefaultAsync(c => c.UserId == userId);
         }
 
         public async Task<Cart> CreateCartAsync(Cart cartCreate)
