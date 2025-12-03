@@ -15,8 +15,8 @@ namespace BibliotecaDevlights.Business.Mapping
             CreateMap<UpdateCartItemDto, CartItem>();
             CreateMap<Cart, CartDto>()
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.CartItems))
-                .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src =>src.CartItems != null ? src.CartItems.Sum(ci => ci.Price * ci.Quantity) : 0))
-                .ForMember(dest => dest.ItemCount, opt => opt.MapFrom(src =>src.CartItems != null ? src.CartItems.Sum(ci => ci.Quantity) : 0));
+                .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.CartItems != null ? src.CartItems.Sum(ci => ci.Price * ci.Quantity) : 0))
+                .ForMember(dest => dest.ItemCount, opt => opt.MapFrom(src => src.CartItems != null ? src.CartItems.Sum(ci => ci.Quantity) : 0));
 
             CreateMap<CartItem, CartItemDto>()
                 .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.Price))

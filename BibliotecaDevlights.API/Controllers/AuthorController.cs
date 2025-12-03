@@ -1,7 +1,7 @@
-﻿using BibliotecaDevlights.Business.DTOs.Author;
+﻿
+using BibliotecaDevlights.Business.DTOs.Author;
 using BibliotecaDevlights.Business.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-
 namespace BibliotecaDevlights.API.Controllers
 {
     [Route("api/[controller]")]
@@ -14,7 +14,7 @@ namespace BibliotecaDevlights.API.Controllers
         {
             _authorService = authorService;
         }
-            
+
         /// <summary>
         /// Obtiene todos los autores
         /// </summary>
@@ -34,15 +34,8 @@ namespace BibliotecaDevlights.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<AuthorDto>> GetById(int id)
         {
-            try
-            {
-                var author = await _authorService.GetByIdAsync(id);
-                return Ok(author);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound(new { message = "Autor no encontrado" });
-            }
+            var author = await _authorService.GetByIdAsync(id);
+            return Ok(author);
         }
 
         /// <summary>
@@ -53,20 +46,12 @@ namespace BibliotecaDevlights.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<AuthorDto>> Create([FromBody] CreateAuthorDto createAuthor)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var author = await _authorService.CreateAsync(createAuthor);
-                return CreatedAtAction(nameof(GetById), new { id = author.Id }, author);
+                return BadRequest(ModelState);
             }
-            catch (ArgumentNullException)
-            {
-                return BadRequest(new { message = "Los datos del autor no pueden estar vacíos" });
-            }
+            var author = await _authorService.CreateAsync(createAuthor);
+            return CreatedAtAction(nameof(GetById), new { id = author.Id }, author);
         }
 
         /// <summary>
@@ -78,24 +63,12 @@ namespace BibliotecaDevlights.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<AuthorDto>> Update(int id, [FromBody] UpdateAuthorDto updateAuthor)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var author = await _authorService.UpdateAsync(id, updateAuthor);
-                return Ok(author);
+                return BadRequest(ModelState);
             }
-            catch (KeyNotFoundException)
-            {
-                return NotFound(new { message = "Autor no encontrado" });
-            }
-            catch (ArgumentNullException)
-            {
-                return BadRequest(new { message = "Los datos del autor no pueden estar vacíos" });
-            }
+            var author = await _authorService.UpdateAsync(id, updateAuthor);
+            return Ok(author);
         }
 
         /// <summary>
@@ -106,15 +79,8 @@ namespace BibliotecaDevlights.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete(int id)
         {
-            try
-            {
-                await _authorService.DeleteAsync(id);
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound(new { message = "Autor no encontrado" });
-            }
+            await _authorService.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

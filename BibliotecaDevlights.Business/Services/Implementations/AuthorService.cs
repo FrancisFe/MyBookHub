@@ -25,7 +25,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
         public async Task<AuthorDto> GetByIdAsync(int id)
         {
             var author = await _authorRepository.GetByIdAsync(id);
-            if(author == null)
+            if (author == null)
             {
                 throw new KeyNotFoundException("Author not found");
             }
@@ -34,7 +34,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
 
         public async Task<AuthorDto> CreateAsync(CreateAuthorDto createAuthor)
         {
-            if(createAuthor == null)
+            if (createAuthor == null)
             {
                 throw new ArgumentNullException(nameof(createAuthor));
             }
@@ -47,13 +47,13 @@ namespace BibliotecaDevlights.Business.Services.Implementations
 
         public async Task<AuthorDto> UpdateAsync(int id, UpdateAuthorDto updateAuthor)
         {
-            if(updateAuthor == null)
+            if (updateAuthor == null)
             {
                 throw new ArgumentNullException(nameof(updateAuthor));
             }
             var authorEntity = _mapper.Map<Author>(updateAuthor);
             var authorExisting = await _authorRepository.UpdateAsync(id, authorEntity);
-            if(authorExisting == null)
+            if (authorExisting == null)
             {
                 throw new KeyNotFoundException("Author not found");
             }
@@ -65,7 +65,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
         public async Task<bool> DeleteAsync(int id)
         {
             var result = await _authorRepository.DeleteAsync(id);
-            if(!result)
+            if (!result)
             {
                 throw new KeyNotFoundException("Author not found");
             }

@@ -29,7 +29,8 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
         }
         public async Task<Author?> UpdateAsync(int id, Author updateAuthor)
         {
-            if(updateAuthor == null) {
+            if (updateAuthor == null)
+            {
                 return null;
             }
             var authorExisting = await GetByIdAsync(id);

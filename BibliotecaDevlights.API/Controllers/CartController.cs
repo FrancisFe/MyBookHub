@@ -16,7 +16,6 @@ namespace BibliotecaDevlights.API.Controllers
         {
             _cartService = cartService;
         }
-
         private int GetCurrentUserId()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
@@ -98,8 +97,7 @@ namespace BibliotecaDevlights.API.Controllers
         public async Task<ActionResult<decimal>> GetCartTotal()
         {
             var userId = GetCurrentUserId();
-            var cart = await _cartService.GetOrCreateCartAsync(userId);
-            var total = await _cartService.GetCartTotalAsync(cart.Id);
+            var total = await _cartService.GetCartTotalAsync(userId);
             return Ok(total);
         }
     }

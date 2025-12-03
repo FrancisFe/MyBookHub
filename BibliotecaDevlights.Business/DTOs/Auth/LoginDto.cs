@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BibliotecaDevlights.Business.DTOs.Auth
+﻿namespace BibliotecaDevlights.Business.DTOs.Auth
 {
     public class LoginDto
     {

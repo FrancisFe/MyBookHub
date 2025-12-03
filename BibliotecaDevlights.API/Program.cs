@@ -15,7 +15,9 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 
-// Add services to the container.
+
+builder.Services.AddControllers();
+
 
 builder.Services.AddAuthentication(opt =>
 {
@@ -37,6 +39,12 @@ builder.Services.AddAuthentication(opt =>
         };
     });
 
+builder.Services.AddAuthorization();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -51,8 +59,6 @@ builder.Services.AddSwaggerGen(c =>
             Email = "contact@blibliotecadevlights.com"
         }
     });
-
-    // Configuración para JWT en Swagger
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -65,11 +71,10 @@ builder.Services.AddSwaggerGen(c =>
 
     c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
     {
-        [new OpenApiSecuritySchemeReference("bearer", document)] = []
+        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
     });
 });
-builder.Services.AddAuthorization();
-builder.Services.AddControllers();
+
 //Add sql connection string
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(

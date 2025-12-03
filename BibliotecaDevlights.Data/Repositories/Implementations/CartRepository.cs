@@ -17,10 +17,10 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
         public async Task<Cart?> GetCartByUserIdAsync(int userId)
         {
             return await _context.Carts
-       .Include(c => c.CartItems!)
-           .ThenInclude(ci => ci.Book)
-               .ThenInclude(b => b!.Author)
-       .FirstOrDefaultAsync(c => c.UserId == userId);
+                .Include(c => c.CartItems!)
+                .ThenInclude(ci => ci.Book)
+                .ThenInclude(b => b!.Author)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
         }
 
         public async Task<Cart> CreateCartAsync(Cart cartCreate)
@@ -84,7 +84,7 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
         //Utilities
         public async Task<bool> CartExistsForUserAsync(int userId)
         {
-           return await _context.Carts.AnyAsync(c => c.UserId == userId);
+            return await _context.Carts.AnyAsync(c => c.UserId == userId);
         }
 
         public async Task<int> GetCartItemCountAsync(int cartId)
@@ -93,11 +93,14 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
                 .Where(ci => ci.CartId == cartId)
                 .SumAsync(ci => (int?)ci.Quantity) ?? 0;
         }
-        public Task<decimal> GetCartTotalAsync(int cartId)
+        public async Task<decimal> GetCartTotalAsync(int userId)
         {
-            return _context.CartItems
-                .Where(ci => ci.CartId == cartId)
-                .SumAsync(ci => ci.Quantity * ci.Price);
+            var cart = await GetCartByUserIdAsync(userId);
+            if (cart == null)
+            {
+                return 0;
+            }
+            return cart.CartItems!.Sum(ci => ci.Price * ci.Quantity);
         }
 
 

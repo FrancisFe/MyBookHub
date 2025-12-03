@@ -1,6 +1,5 @@
 ﻿using BibliotecaDevlights.Business.DTOs.Book;
 using BibliotecaDevlights.Business.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaDevlights.API.Controllers

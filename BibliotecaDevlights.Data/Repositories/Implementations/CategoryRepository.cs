@@ -25,7 +25,7 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
             await _context.Categories.AddAsync(newCategory);
             await _context.SaveChangesAsync();
         }
-        public async Task<Category?> UpdateAsync(int id,Category updatedCategory)
+        public async Task<Category?> UpdateAsync(int id, Category updatedCategory)
         {
             if (updatedCategory == null)
                 return null;

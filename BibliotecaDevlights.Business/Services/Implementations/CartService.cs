@@ -24,11 +24,11 @@ namespace BibliotecaDevlights.Business.Services.Implementations
             var cart = await _cartRepository.GetCartByUserIdAsync(userId);
             if (cart == null)
                 return null;
-            
+
             var cartDto = _mapper.Map<CartDto>(cart);
             cartDto.TotalPrice = await _cartRepository.GetCartTotalAsync(cart.Id);
             cartDto.ItemCount = await _cartRepository.GetCartItemCountAsync(cart.Id);
-            
+
             return cartDto;
         }
 
@@ -46,7 +46,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
                 var cart = await _cartRepository.CreateCartAsync(newCart);
                 return _mapper.Map<CartDto>(cart);
             }
-            
+
             var existingCart = await _cartRepository.GetCartByUserIdAsync(userId);
             return _mapper.Map<CartDto>(existingCart);
         }
@@ -192,14 +192,14 @@ namespace BibliotecaDevlights.Business.Services.Implementations
             }
             return await _cartRepository.GetCartItemCountAsync(cart.Id);
         }
-        public async Task<decimal> GetCartTotalAsync(int cartId)
+        public async Task<decimal> GetCartTotalAsync(int userId)
         {
-            var cart = await _cartRepository.GetCartByUserIdAsync(cartId);
+            var cart = await _cartRepository.GetCartByUserIdAsync(userId);
             if (cart == null)
             {
                 throw new InvalidOperationException("Carrito no encontrado");
             }
-            return await _cartRepository.GetCartTotalAsync(cartId);
+            return await _cartRepository.GetCartTotalAsync(userId);
         }
     }
 }

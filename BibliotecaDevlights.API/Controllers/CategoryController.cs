@@ -1,8 +1,6 @@
 ﻿using BibliotecaDevlights.Business.DTOs.Category;
 using BibliotecaDevlights.Business.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace BibliotecaDevlights.API.Controllers
 {
@@ -33,7 +31,7 @@ namespace BibliotecaDevlights.API.Controllers
         [HttpPost]
         public async Task<ActionResult<CategoryDto>> Create([FromBody] CreateCategoryDto createCategory)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -44,7 +42,7 @@ namespace BibliotecaDevlights.API.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<CategoryDto>> Update(int id, [FromBody] UpdateCategoryDto updateCategory)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
