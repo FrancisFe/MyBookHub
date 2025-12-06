@@ -29,10 +29,10 @@ namespace BibliotecaDevlights.Business.Services.Implementations
             _cartService = cartService;
         }
 
-        public async Task<IEnumerable<OrderDto>> GetAllOrdersAsync()
+        public async Task<IEnumerable<OrderSimpleDto>> GetAllOrdersAsync()
         {
             var order = await _orderRepository.GetAllAsync();
-            return _mapper.Map<IEnumerable<OrderDto>>(order);
+            return _mapper.Map<IEnumerable<OrderSimpleDto>>(order);
         }
 
         public async Task<OrderDto?> GetOrderByIdAsync(int orderId, int userId)

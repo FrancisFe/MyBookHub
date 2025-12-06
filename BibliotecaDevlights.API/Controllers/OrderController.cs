@@ -22,7 +22,7 @@ namespace BibliotecaDevlights.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderDto>>> GetAllOrders()
+        public async Task<ActionResult<IEnumerable<OrderSimpleDto>>> GetAllOrders()
         {
             var orders = await _orderService.GetAllOrdersAsync();
             return Ok(orders);
