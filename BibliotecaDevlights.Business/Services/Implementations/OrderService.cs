@@ -87,6 +87,9 @@ namespace BibliotecaDevlights.Business.Services.Implementations
                     BookId = ci.BookId,
                     Quantity = ci.Quantity,
                     Price = ci.Price,
+                    Type = ci.Type,
+                    RentalStartDate = ci.RentalStartDate,
+                    RentalEndDate = ci.RentalEndDate,
                 }).ToList()
             };
 
@@ -99,7 +102,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
                     var book = await _bookRepository.GetByIdAsync(item.BookId);
                     if (book != null)
                     {
-                        var isPurchase = item.Type == "Purchase";
+                        var isPurchase = item.Type == TransactionType.Purchase;
                         if (isPurchase)
                             book.StockPurchase -= item.Quantity;
                         else
@@ -146,7 +149,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
                     var book = await _bookRepository.GetByIdAsync(orderItem.BookId);
                     if (book != null)
                     {
-                        var isPurchase = orderItem.Price == book.PurchasePrice;
+                        var isPurchase = orderItem.Type == TransactionType.Purchase;
                         if (isPurchase)
                             book.StockPurchase += orderItem.Quantity;
                         else
@@ -168,5 +171,92 @@ namespace BibliotecaDevlights.Business.Services.Implementations
             }
             return false;
         }
+
+        public async Task MarkAsReturnedAsync(int orderId, int userId)
+        {
+            if (!await _orderRepository.ExistsAsync(orderId))
+            {
+                throw new KeyNotFoundException("Order not found");
+            }
+
+            if (!await _orderRepository.UserOwnsOrderAsync(orderId, userId))
+            {
+                throw new UnauthorizedAccessException("User does not own the order");
+            }
+
+            var order = await _orderRepository.GetByIdAsync(orderId);
+            if (order?.OrderItems == null || !order.OrderItems.Any())
+            {
+                throw new InvalidOperationException("Order has no items");
+            }
+
+            var rentalItems = order.OrderItems
+                .Where(oi => oi.Type == TransactionType.Rental && !oi.IsReturned)
+                .ToList();
+
+            if (!rentalItems.Any())
+            {
+                throw new InvalidOperationException("No rental items found to return");
+            }
+
+            foreach (var rentalItem in rentalItems)
+            {
+                rentalItem.IsReturned = true;
+                rentalItem.RentalReturnedDate = DateTime.UtcNow;
+
+                var book = await _bookRepository.GetByIdAsync(rentalItem.BookId);
+                if (book != null)
+                {
+                    book.StockRental += rentalItem.Quantity;
+                    await _bookRepository.UpdateAsync(book);
+                }
+            }
+
+            await _orderRepository.UpdateAsync(order);
+        }
+        public async Task MarkItemAsReturnedAsync(int orderItemId, int userId)
+        {
+            var orderItem = await _orderRepository.GetOrderItemByIdAsync(orderItemId);
+            if (orderItem == null)
+            {
+                throw new KeyNotFoundException("Order item not found");
+            }
+
+            var order = await _orderRepository.GetByIdAsync(orderItem.OrderId);
+            if (!await _orderRepository.UserOwnsOrderAsync(order!.Id, userId))
+            {
+                throw new UnauthorizedAccessException("User does not own this item");
+            }
+
+            if (orderItem.Type != TransactionType.Rental || orderItem.IsReturned)
+            {
+                throw new InvalidOperationException("This item cannot be returned");
+            }
+
+            orderItem.IsReturned = true;
+            orderItem.RentalReturnedDate = DateTime.UtcNow;
+
+            var book = await _bookRepository.GetByIdAsync(orderItem.BookId);
+            if (book != null)
+            {
+                book.StockRental += orderItem.Quantity;
+                await _bookRepository.UpdateAsync(book);
+            }
+
+            await _orderRepository.UpdateOrderItemAsync(orderItem);
+        }
+        public async Task<IEnumerable<OrderDto>> GetActiveRentalsAsync(int userId)
+        {
+            var order = await _orderRepository.GetActiveRentalsByUserIdAsync(userId);
+            return _mapper.Map<IEnumerable<OrderDto>>(order);
+        }
+
+        public async Task<IEnumerable<OrderDto>> GetOverdueRentalsAsync(int userId)
+        {
+            var order = await _orderRepository.GetOverdueRentalsAsync(userId);
+            return _mapper.Map<IEnumerable<OrderDto>>(order);
+        }
+
+        
     }
 }

@@ -92,5 +92,48 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
         {
             return await _context.Orders.AnyAsync(o => o.Id == orderId && o.UserId == userId);
         }
+        public async Task UpdateAsync(Order order)
+        {
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<IEnumerable<Order>> GetActiveRentalsByUserIdAsync(int userId)
+        {
+            return await _context.Orders
+                .AsNoTracking()
+                .Where(o => o.UserId == userId)
+                .Include(o => o.OrderItems!)
+                .ThenInclude(oi => oi.Book)
+                .Where(o => o.OrderItems!.Any(oi => oi.Type == TransactionType.Rental && !oi.IsReturned))
+                .ToListAsync();
+
+        }
+
+        public async Task<IEnumerable<Order>> GetOverdueRentalsAsync(int userId)
+        {
+            var currentDate = DateTime.UtcNow;
+            return await _context.Orders
+                .AsNoTracking()
+                .Where(o => o.UserId == userId)
+                .Include(o => o.OrderItems!)
+                .ThenInclude(oi => oi.Book)
+                .Where(o => o.OrderItems!.Any(oi => oi.Type == TransactionType.Rental && !oi.IsReturned && oi.RentalEndDate < currentDate))
+                .ToListAsync();
+
+        }
+
+        public async Task<OrderItem?> GetOrderItemByIdAsync(int orderItemId)
+        {
+            return await _context.OrderItems
+                .Include(oi => oi.Order)
+                .Include(oi => oi.Book)
+                .FirstOrDefaultAsync(oi => oi.Id == orderItemId);
+        }
+
+        public async Task UpdateOrderItemAsync(OrderItem orderItem)
+        {
+            _context.OrderItems.Update(orderItem);
+            await _context.SaveChangesAsync();
+        }
     }
 }
