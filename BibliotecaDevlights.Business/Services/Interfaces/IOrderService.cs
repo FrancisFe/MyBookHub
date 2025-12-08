@@ -21,7 +21,6 @@ namespace BibliotecaDevlights.Business.Services.Interfaces
 
         //Rental
         Task MarkAsReturnedAsync(int orderId, int userId);
-        Task MarkItemAsReturnedAsync(int orderItemId, int userId);
         Task<IEnumerable<OrderDto>> GetActiveRentalsAsync(int userId);
         Task<IEnumerable<OrderDto>> GetOverdueRentalsAsync(int userId);
 

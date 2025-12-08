@@ -17,11 +17,8 @@ namespace BibliotecaDevlights.Data.Repositories.Interfaces
         Task<bool> ExistsAsync(int id);
         Task<bool> UserOwnsOrderAsync(int orderId, int userId);
         Task UpdateAsync(Order order);
-        Task UpdateOrderItemAsync(OrderItem orderItem);
         Task<IEnumerable<Order>> GetActiveRentalsByUserIdAsync(int userId);
         Task<IEnumerable<Order>> GetOverdueRentalsAsync(int userId);
-
-        Task<OrderItem?> GetOrderItemByIdAsync(int orderItemId);
         
     }
 }

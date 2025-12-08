@@ -51,6 +51,20 @@ namespace BibliotecaDevlights.API.Controllers
             return Ok(orders);
         }
 
+        [HttpGet("details/user/{userId}")]
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersByUserIdWithDetailsAsync(int userId)
+        {
+            var currentUserId = _userContextService.GetUserId();
+
+            if (currentUserId != userId)
+            {
+                return Forbid();
+            }
+
+            var orders = await _orderService.GetOrdersByUserIdWithDetailsAsync(userId);
+            return Ok(orders);
+        }
+
         [HttpPost]
         public async Task<ActionResult<OrderDto>> CreateOrder()
         {
@@ -59,7 +73,7 @@ namespace BibliotecaDevlights.API.Controllers
             return Ok(order);
         }
 
-        [HttpPut("{orderId}/status/{status}")]
+        [HttpPut("{orderId}/{status}")]
         public async Task<ActionResult> UpdateOrderStatus(int orderId, OrderStatus status)
         {
             await _orderService.UpdateOrderStatusAsync(orderId, status);
@@ -72,6 +86,30 @@ namespace BibliotecaDevlights.API.Controllers
             var userId = _userContextService.GetUserId();
             await _orderService.CancelOrderAsync(orderId, userId);
             return NoContent();
+        }
+
+        [HttpPut("{orderId}/mark-returned")]
+        public async Task<ActionResult> MarkAsReturned(int orderId)
+        {
+            var userId = _userContextService.GetUserId();
+            await _orderService.MarkAsReturnedAsync(orderId, userId);
+            return NoContent();
+        }
+
+        [HttpGet("activerentals")]
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetActiveRentals()
+        {
+            var userId = _userContextService.GetUserId();
+            var orders = await _orderService.GetActiveRentalsAsync(userId);
+            return Ok(orders);
+        }
+
+        [HttpGet("overduerentals")]
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetOverdueRentals()
+        {
+            var userId = _userContextService.GetUserId();
+            var orders = await _orderService.GetOverdueRentalsAsync(userId);
+            return Ok(orders);
         }
     }
 }

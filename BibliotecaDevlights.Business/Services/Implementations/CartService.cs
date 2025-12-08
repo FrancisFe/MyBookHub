@@ -2,6 +2,7 @@
 using BibliotecaDevlights.Business.DTOs.Cart;
 using BibliotecaDevlights.Business.Services.Interfaces;
 using BibliotecaDevlights.Data.Entities;
+using BibliotecaDevlights.Data.Enums;
 using BibliotecaDevlights.Data.Repositories.Interfaces;
 
 namespace BibliotecaDevlights.Business.Services.Implementations
@@ -67,6 +68,10 @@ namespace BibliotecaDevlights.Business.Services.Implementations
                 throw new InvalidOperationException("Libro no encontrado");
             }
 
+            var transactionType = Enum.TryParse<TransactionType>(addToCartDto.Type, true, out var type)
+                ? type
+                : TransactionType.Purchase;
+
             var existingItem = await _cartRepository.GetCartItemAsync(cart.Id, addToCartDto.BookId);
             if (existingItem != null)
             {
@@ -80,7 +85,10 @@ namespace BibliotecaDevlights.Business.Services.Implementations
                     CartId = cart.Id,
                     BookId = addToCartDto.BookId,
                     Quantity = addToCartDto.Quantity,
-                    Price = addToCartDto.Type == "Purchase" ? book.PurchasePrice : book.RentalPricePerDay
+                    Price = transactionType == TransactionType.Purchase ? book.PurchasePrice : book.RentalPricePerDay,
+                    Type = transactionType,
+                    RentalStartDate = addToCartDto.RentalStartDate,
+                    RentalEndDate = addToCartDto.RentalEndDate
                 };
                 await _cartRepository.AddItemToCartAsync(cartItem);
             }
@@ -148,8 +156,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
                     throw new InvalidOperationException($"Libro con ID {item.BookId} no encontrado");
                 }
 
-                var isPurchase = item.Price == book.PurchasePrice;
-                var availableStock = isPurchase ? book.StockPurchase : book.StockRental;
+                var availableStock = item.Type == TransactionType.Purchase ? book.StockPurchase : book.StockRental;
 
                 if (item.Quantity > availableStock)
                 {
@@ -167,7 +174,11 @@ namespace BibliotecaDevlights.Business.Services.Implementations
                 return false;
             }
 
-            var availableStock = type == "Purchase" ? book.StockPurchase : book.StockRental;
+            var transactionType = Enum.TryParse<TransactionType>(type, true, out var parsedType)
+                ? parsedType
+                : TransactionType.Purchase;
+
+            var availableStock = transactionType == TransactionType.Purchase ? book.StockPurchase : book.StockRental;
 
             var cart = await _cartRepository.GetCartByUserIdAsync(userId);
             if (cart != null)
@@ -192,6 +203,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
             }
             return await _cartRepository.GetCartItemCountAsync(cart.Id);
         }
+
         public async Task<decimal> GetCartTotalAsync(int userId)
         {
             var cart = await _cartRepository.GetCartByUserIdAsync(userId);

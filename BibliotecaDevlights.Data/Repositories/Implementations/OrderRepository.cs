@@ -121,19 +121,5 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
                 .ToListAsync();
 
         }
-
-        public async Task<OrderItem?> GetOrderItemByIdAsync(int orderItemId)
-        {
-            return await _context.OrderItems
-                .Include(oi => oi.Order)
-                .Include(oi => oi.Book)
-                .FirstOrDefaultAsync(oi => oi.Id == orderItemId);
-        }
-
-        public async Task UpdateOrderItemAsync(OrderItem orderItem)
-        {
-            _context.OrderItems.Update(orderItem);
-            await _context.SaveChangesAsync();
-        }
     }
 }

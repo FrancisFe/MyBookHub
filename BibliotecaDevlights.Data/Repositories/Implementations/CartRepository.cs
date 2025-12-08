@@ -1,5 +1,6 @@
 ﻿using BibliotecaDevlights.Data.Data;
 using BibliotecaDevlights.Data.Entities;
+using BibliotecaDevlights.Data.Enums;
 using BibliotecaDevlights.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -100,7 +101,25 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
             {
                 return 0;
             }
-            return cart.CartItems!.Sum(ci => ci.Price * ci.Quantity);
+
+            decimal total = 0;
+
+            foreach (var ci in cart.CartItems!)
+            {
+                if (ci.Type == TransactionType.Rental && ci.RentalStartDate.HasValue && ci.RentalEndDate.HasValue)
+                {
+                    int rentalDays = (ci.RentalEndDate.Value - ci.RentalStartDate.Value).Days;
+                    rentalDays = Math.Max(rentalDays, 1); 
+
+                    total += ci.Book!.RentalPricePerDay * rentalDays * ci.Quantity;
+                }
+                else
+                {
+                    total += ci.Price * ci.Quantity;
+                }
+            }
+
+            return total;
         }
 
 

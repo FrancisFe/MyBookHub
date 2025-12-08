@@ -42,7 +42,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
             {
                 throw new KeyNotFoundException("Order not found");
             }
-            if (!await _orderRepository.UserOwnsOrderAsync(orderId, userId))
+            if (!await UserOwnsOrderAsync(orderId, userId))
             {
                 throw new UnauthorizedAccessException("User does not own the order");
             }
@@ -82,36 +82,56 @@ namespace BibliotecaDevlights.Business.Services.Implementations
                 UserId = cart.UserId,
                 OrderDate = DateTime.UtcNow,
                 Status = OrderStatus.Pending,
-                OrderItems = cart.CartItems!.Select(ci => new OrderItem
-                {
-                    BookId = ci.BookId,
-                    Quantity = ci.Quantity,
-                    Price = ci.Price,
-                    Type = ci.Type,
-                    RentalStartDate = ci.RentalStartDate,
-                    RentalEndDate = ci.RentalEndDate,
-                }).ToList()
+                OrderItems = new List<OrderItem>()
             };
+
+            decimal totalAmount = 0;
 
             try
             {
-                await _orderRepository.AddAsync(order);
-
-                foreach (var item in cart.CartItems)
+                foreach (var ci in cart.CartItems)
                 {
-                    var book = await _bookRepository.GetByIdAsync(item.BookId);
-                    if (book != null)
+                    var book = await _bookRepository.GetByIdAsync(ci.BookId);
+                    if (book == null)
                     {
-                        var isPurchase = item.Type == TransactionType.Purchase;
-                        if (isPurchase)
-                            book.StockPurchase -= item.Quantity;
-                        else
-                            book.StockRental -= item.Quantity;
-
-                        await _bookRepository.UpdateAsync(book);
+                        throw new InvalidOperationException($"Libro con ID {ci.BookId} no encontrado");
                     }
+
+                    var orderItem = new OrderItem
+                    {
+                        BookId = ci.BookId,
+                        Book = book,
+                        Quantity = ci.Quantity,
+                        Price = ci.Price,
+                        Type = ci.Type,
+                        RentalStartDate = ci.RentalStartDate,
+                        RentalEndDate = ci.RentalEndDate
+                    };
+
+                    order.OrderItems!.Add(orderItem);
+
+                    if (ci.Type == TransactionType.Rental && ci.RentalStartDate.HasValue && ci.RentalEndDate.HasValue)
+                    {
+                        int rentalDays = (ci.RentalEndDate.Value.Date - ci.RentalStartDate.Value.Date).Days;
+                        rentalDays = Math.Max(rentalDays, 1);
+                        totalAmount += ci.Price * ci.Quantity * rentalDays;
+                    }
+                    else
+                    {
+                        totalAmount += ci.Price * ci.Quantity;
+                    }
+
+                    var isPurchase = ci.Type == TransactionType.Purchase;
+                    if (isPurchase)
+                        book.StockPurchase -= ci.Quantity;
+                    else
+                        book.StockRental -= ci.Quantity;
+
+                    await _bookRepository.UpdateAsync(book);
                 }
 
+                order.TotalAmount = totalAmount;
+                await _orderRepository.AddAsync(order);
                 await _cartRepository.ClearCartAsync(userId);
 
                 return _mapper.Map<OrderDto>(order);
@@ -137,7 +157,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
             {
                 return false;
             }
-            if (!await _orderRepository.UserOwnsOrderAsync(orderId, userId))
+            if (!await UserOwnsOrderAsync(orderId, userId))
             {
                 throw new UnauthorizedAccessException("User does not own the order");
             }
@@ -163,14 +183,6 @@ namespace BibliotecaDevlights.Business.Services.Implementations
             return await _orderRepository.DeleteAsync(orderId);
         }
 
-        public async Task<bool> UserOwnsOrderAsync(int orderId, int userId)
-        {
-            if (await _orderRepository.ExistsAsync(orderId))
-            {
-                return await _orderRepository.UserOwnsOrderAsync(orderId, userId);
-            }
-            return false;
-        }
 
         public async Task MarkAsReturnedAsync(int orderId, int userId)
         {
@@ -179,7 +191,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
                 throw new KeyNotFoundException("Order not found");
             }
 
-            if (!await _orderRepository.UserOwnsOrderAsync(orderId, userId))
+            if (!await UserOwnsOrderAsync(orderId, userId))
             {
                 throw new UnauthorizedAccessException("User does not own the order");
             }
@@ -211,40 +223,10 @@ namespace BibliotecaDevlights.Business.Services.Implementations
                     await _bookRepository.UpdateAsync(book);
                 }
             }
-
+            order.Status= OrderStatus.Completed;
             await _orderRepository.UpdateAsync(order);
         }
-        public async Task MarkItemAsReturnedAsync(int orderItemId, int userId)
-        {
-            var orderItem = await _orderRepository.GetOrderItemByIdAsync(orderItemId);
-            if (orderItem == null)
-            {
-                throw new KeyNotFoundException("Order item not found");
-            }
-
-            var order = await _orderRepository.GetByIdAsync(orderItem.OrderId);
-            if (!await _orderRepository.UserOwnsOrderAsync(order!.Id, userId))
-            {
-                throw new UnauthorizedAccessException("User does not own this item");
-            }
-
-            if (orderItem.Type != TransactionType.Rental || orderItem.IsReturned)
-            {
-                throw new InvalidOperationException("This item cannot be returned");
-            }
-
-            orderItem.IsReturned = true;
-            orderItem.RentalReturnedDate = DateTime.UtcNow;
-
-            var book = await _bookRepository.GetByIdAsync(orderItem.BookId);
-            if (book != null)
-            {
-                book.StockRental += orderItem.Quantity;
-                await _bookRepository.UpdateAsync(book);
-            }
-
-            await _orderRepository.UpdateOrderItemAsync(orderItem);
-        }
+        
         public async Task<IEnumerable<OrderDto>> GetActiveRentalsAsync(int userId)
         {
             var order = await _orderRepository.GetActiveRentalsByUserIdAsync(userId);
@@ -257,6 +239,16 @@ namespace BibliotecaDevlights.Business.Services.Implementations
             return _mapper.Map<IEnumerable<OrderDto>>(order);
         }
 
-        
+
+        public async Task<bool> UserOwnsOrderAsync(int orderId, int userId)
+        {
+            if (await _orderRepository.ExistsAsync(orderId))
+            {
+                return await _orderRepository.UserOwnsOrderAsync(orderId, userId);
+            }
+            return false;
+        }
+
+
     }
 }
