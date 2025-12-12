@@ -1,5 +1,7 @@
 ﻿using BibliotecaDevlights.Data.Data;
 using BibliotecaDevlights.Data.Entities;
+using BibliotecaDevlights.Data.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace BibliotecaDevlight.Data.Seeders
 {
@@ -12,6 +14,33 @@ namespace BibliotecaDevlight.Data.Seeders
             {
                 return; // La BD ya tiene datos
             }
+
+            // ===== USUARIOS =====
+            var passwordHasher = new PasswordHasher<User>();
+            var users = new User[]
+            {
+                new User
+                {
+                    UserName = "admin",
+                    Email = "admin@bibliotecadevlights.com",
+                    PasswordHash = passwordHasher.HashPassword(null, "Admin123_"),
+                    Role = UserRole.Admin,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                },
+                new User
+                {
+                    UserName = "usuario1",
+                    Email = "usuario1@bibliotecadevlights.com",
+                    PasswordHash = passwordHasher.HashPassword(null, "User123_"),
+                    Role = UserRole.User,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                }
+            };
+
+            context.Users.AddRange(users);
+            context.SaveChanges();
 
             // ===== CATEGORÍAS =====
             var categories = new Category[]

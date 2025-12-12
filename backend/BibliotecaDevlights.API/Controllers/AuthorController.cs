@@ -1,6 +1,6 @@
-﻿
-using BibliotecaDevlights.Business.DTOs.Author;
+﻿using BibliotecaDevlights.Business.DTOs.Author;
 using BibliotecaDevlights.Business.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace BibliotecaDevlights.API.Controllers
 {
@@ -42,6 +42,7 @@ namespace BibliotecaDevlights.API.Controllers
         /// Crea un nuevo autor
         /// </summary>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<AuthorDto>> Create([FromBody] CreateAuthorDto createAuthor)
@@ -58,6 +59,7 @@ namespace BibliotecaDevlights.API.Controllers
         /// Actualiza un autor existente
         /// </summary>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -75,6 +77,7 @@ namespace BibliotecaDevlights.API.Controllers
         /// Elimina un autor
         /// </summary>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete(int id)

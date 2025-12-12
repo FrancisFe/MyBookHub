@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using BibliotecaDevlights.Data.Entities;
+using BibliotecaDevlights.Data.Enums;
 
 namespace BibliotecaDevlights.Data.Configurations
 {
@@ -31,8 +32,9 @@ namespace BibliotecaDevlights.Data.Configurations
                 .IsRequired(false)
                 .HasMaxLength(500);
 
-            builder.Property(u => u.IsAdmin)
-                .HasDefaultValue(false);
+            builder.Property(u => u.Role)
+                .HasConversion<int>()
+                .HasDefaultValue(UserRole.User);
 
             builder.Property(u => u.CreatedAt)
                 .HasDefaultValueSql("GETUTCDATE()");

@@ -14,7 +14,10 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
         }
         public async Task<IEnumerable<Book>> GetAllAsync()
         {
-            return await _context.Books.AsNoTracking().ToListAsync();
+            return await _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Category)
+                .AsNoTracking().ToListAsync();
         }
 
         public async Task<Book?> GetByIdAsync(int id)

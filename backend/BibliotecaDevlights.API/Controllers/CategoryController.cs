@@ -1,5 +1,6 @@
 ﻿using BibliotecaDevlights.Business.DTOs.Category;
 using BibliotecaDevlights.Business.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaDevlights.API.Controllers
@@ -29,6 +30,7 @@ namespace BibliotecaDevlights.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<CategoryDto>> Create([FromBody] CreateCategoryDto createCategory)
         {
             if (!ModelState.IsValid)
@@ -40,6 +42,7 @@ namespace BibliotecaDevlights.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<CategoryDto>> Update(int id, [FromBody] UpdateCategoryDto updateCategory)
         {
             if (!ModelState.IsValid)
@@ -51,6 +54,7 @@ namespace BibliotecaDevlights.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<bool>> Delete(int id)
         {
             await _categoryService.DeleteAsync(id);

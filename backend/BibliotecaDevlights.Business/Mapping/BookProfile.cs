@@ -10,7 +10,9 @@ namespace BibliotecaDevlights.Business.Mapping
         {
             CreateMap<CreateBookDto, Book>();
             CreateMap<UpdateBookDto, Book>();
-            CreateMap<Book, BookDto>();
+            CreateMap<Book, BookDto>()
+                           .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author != null ? $"{src.Author.FirstName} {src.Author.LastName}" : string.Empty))
+                           .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : string.Empty));
             CreateMap<Book, BookDetailsDto>()
                 .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author))
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category));

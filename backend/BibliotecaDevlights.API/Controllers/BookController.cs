@@ -1,5 +1,6 @@
 ﻿using BibliotecaDevlights.Business.DTOs.Book;
 using BibliotecaDevlights.Business.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaDevlights.API.Controllers
@@ -13,6 +14,7 @@ namespace BibliotecaDevlights.API.Controllers
         {
             _bookService = bookService;
         }
+        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookDto>>> GetAll()
         {
@@ -26,7 +28,9 @@ namespace BibliotecaDevlights.API.Controllers
             var book = await _bookService.GetByIdAsync(id);
             return Ok(book);
         }
+        
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<BookDto>> Create([FromBody] CreateBookDto createBook)
         {
             if (!ModelState.IsValid)
@@ -36,7 +40,9 @@ namespace BibliotecaDevlights.API.Controllers
             var createdBook = await _bookService.CreateAsync(createBook);
             return CreatedAtAction(nameof(GetById), new { id = createdBook.Id }, createdBook);
         }
+        
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<BookDto>> Update(int id, [FromBody] UpdateBookDto updateBook)
         {
             if (!ModelState.IsValid)
@@ -48,6 +54,7 @@ namespace BibliotecaDevlights.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<bool>> Delete(int id)
         {
             await _bookService.DeleteAsync(id);
@@ -60,6 +67,7 @@ namespace BibliotecaDevlights.API.Controllers
             var books = await _bookService.SearchBooksAsync(query);
             return Ok(books);
         }
+        
         [HttpGet("category/{categoryId}")]
         public async Task<ActionResult<IEnumerable<BookDto>>> GetByCategory(int categoryId)
         {
@@ -73,6 +81,5 @@ namespace BibliotecaDevlights.API.Controllers
             var books = await _bookService.GetBooksByAuthorIdAsync(authorId);
             return Ok(books);
         }
-
     }
 }
