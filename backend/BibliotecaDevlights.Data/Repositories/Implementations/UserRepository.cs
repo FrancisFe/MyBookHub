@@ -1,5 +1,6 @@
 ﻿using BibliotecaDevlights.Data.Data;
 using BibliotecaDevlights.Data.Entities;
+using BibliotecaDevlights.Data.Enums;
 using BibliotecaDevlights.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,6 +39,14 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
         public async Task<User?> GetByEmailAsync(string email)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public async Task<UserRole> GetUserRole(int userId)
+        {
+            return await _context.Users
+                .Where(u => u.Id == userId)
+                .Select(u => u.Role)
+                .FirstOrDefaultAsync();
         }
     }
 }

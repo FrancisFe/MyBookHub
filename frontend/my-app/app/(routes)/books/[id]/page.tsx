@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-// app/books/[id]/page. tsx
+
 import { getBookById } from "@/features/books/services/bookService";
+import { isUserAdmin } from "@/features/auth/services/authService"; // ✅ Importar función para obtener usuario
 import Link from "next/link";
 
 interface BookDetailPageProps {
@@ -12,9 +13,12 @@ interface BookDetailPageProps {
 export default async function BookDetailPage({ params }: BookDetailPageProps) {
   const { id } = await params;
   const book = await getBookById(id);
+  const userAdmin = await isUserAdmin(); // ✅ Obtener usuario actual
 
   const hasPurchaseStock = book.stockPurchase > 0;
   const hasRentalStock = book.stockRental > 0;
+
+  // ✅ Verificar si el usuario es admin
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -33,16 +37,39 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
               className="w-full rounded-lg shadow-lg"
             />
           )}
+
+          {/* ✅ Mostrar solo si es admin */}
+          {userAdmin && (
+            <>
+              <Link
+                href={`/books/${book.id}/edit`}
+                className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 block text-center"
+              >
+                Editar Libro
+              </Link>
+              <Link
+                href={`/books/${book.id}/delete`}
+                className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 block text-center"
+              >
+                Borrar Libro
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Información */}
         <div className="md:col-span-2">
           <h1 className="text-4xl font-bold mb-2">{book.title}</h1>
           <p className="text-xl text-gray-600 mb-4">
-            {typeof book.author === 'string' ? book.author : book.author.fullName}
+            {typeof book.author === "string"
+              ? book.author
+              : book.author.fullName}
           </p>
           <p className="text-sm text-gray-500 mb-6">
-            Categoría: {typeof book.category === 'string' ? book.category : book.category.name}
+            Categoría:{" "}
+            {typeof book.category === "string"
+              ? book.category
+              : book.category.name}
           </p>
 
           {/* Descripción */}

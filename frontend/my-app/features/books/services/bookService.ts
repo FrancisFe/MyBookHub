@@ -9,6 +9,7 @@ const url = `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/book`;
  */
 export const getBooks = async (): Promise<BookDTO[]> => {
   try {
+    await new Promise(resolve => setTimeout(resolve, 1000));
     const response = await fetch(url, {
       method: "GET",
       headers: {

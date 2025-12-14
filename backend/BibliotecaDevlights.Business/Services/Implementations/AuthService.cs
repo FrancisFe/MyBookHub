@@ -3,6 +3,7 @@ using BibliotecaDevlights.Business.DTOs.Auth;
 using BibliotecaDevlights.Business.DTOs.User;
 using BibliotecaDevlights.Business.Services.Interfaces;
 using BibliotecaDevlights.Data.Entities;
+using BibliotecaDevlights.Data.Enums;
 using BibliotecaDevlights.Data.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -68,6 +69,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
             return CreateToken(user);
         }
 
+
         public async Task<UserDto?> RegisterAsync(RegisterDto request)
         {
             if (await _userRepository.EmailExistAsync(request.Email) ||
@@ -89,6 +91,10 @@ namespace BibliotecaDevlights.Business.Services.Implementations
             await _userRepository.AddAsync(user);
             _logger.LogInformation("User {Email} registered successfully", request.Email);
             return _mapper.Map<UserDto>(user);
+        }
+        public async Task<UserRole> GetUserRole(int userId)
+        {
+            return await _userRepository.GetUserRole(userId);
         }
 
         private TokenResponseDto CreateToken(User user)
@@ -149,5 +155,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
                 throw;
             }
         }
+
+
     }
 }

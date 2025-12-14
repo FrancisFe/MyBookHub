@@ -1,5 +1,5 @@
 "use client";
-import { createBookAction } from "@/features/books/actions/bookActions";
+import { createBookAction } from "@/features/books/services/bookActions";
 import { CreateBookDTO } from "@/features/types/book";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

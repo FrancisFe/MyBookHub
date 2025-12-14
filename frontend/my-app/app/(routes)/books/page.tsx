@@ -1,5 +1,7 @@
-import BookList from '@/features/books/components/BookList';
-import Link from 'next/link';
+import BookList from "@/features/books/components/bookList";
+import Link from "next/link";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 export default function BooksPage() {
   return (
@@ -13,8 +15,9 @@ export default function BooksPage() {
           + Nuevo Libro
         </Link>
       </div>
-
-      <BookList />
+      <Suspense fallback={<Loading />}>
+        <BookList />
+      </Suspense>
     </div>
   );
 }

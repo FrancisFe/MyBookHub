@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Proteger /books/new
-  if (pathname.startsWith('/books/new') || pathname.startsWith('/books/') && pathname.endsWith('/edit')) {
+  if (pathname.startsWith('/books/new') || pathname.startsWith('/books/') && ( pathname.endsWith('/edit') || pathname.endsWith('/delete'))) {
     if (!token) {
       return NextResponse.redirect(new URL('/login', request.url));
     }

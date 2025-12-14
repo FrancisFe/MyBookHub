@@ -117,12 +117,20 @@ export const deleteBookAction = async (
   id: string
 ): Promise<{ success: boolean; message: string }> => {
   try {
+     const token = await getAuthToken();
+    if (!token) {
+      return {
+        success: false,
+        message: "No autenticado. Por favor inicia sesión.",
+      };
+    }
     const response = await fetch(
       `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/book/${id}`,
       {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       }
     );

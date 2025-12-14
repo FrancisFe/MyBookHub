@@ -1,10 +1,7 @@
-/* eslint-disable react-hooks/error-boundaries */
-// Server Component
 import { getBooks } from '@/features/books/services/bookService';
 import BookCard from './bookCard';
 
 export default async function BookList() {
-  try {
     const books = await getBooks();
 
     if (! books || books.length === 0) {
@@ -22,14 +19,4 @@ export default async function BookList() {
         ))}
       </div>
     );
-  } catch (error) {
-    return (
-      <div className="text-center py-10">
-        <p className="text-red-500">Error cargando los libros</p>
-        <p className="text-gray-500 text-sm">
-          {error instanceof Error ? error.message : 'Intenta nuevamente más tarde'}
-        </p>
-      </div>
-    );
   }
-}

@@ -1,4 +1,5 @@
 ﻿using BibliotecaDevlights.Data.Entities;
+using BibliotecaDevlights.Data.Enums;
 
 namespace BibliotecaDevlights.Data.Repositories.Interfaces
 {
@@ -10,5 +11,6 @@ namespace BibliotecaDevlights.Data.Repositories.Interfaces
         Task<User> AddAsync(User user);
         Task<User> UpdateAsync(User user);
         Task<User?> GetByEmailAsync(string email);
+        Task<UserRole> GetUserRole(int userId);
     }
 }

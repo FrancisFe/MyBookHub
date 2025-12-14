@@ -1,7 +1,10 @@
 ﻿using BibliotecaDevlights.Business.DTOs.Auth;
 using BibliotecaDevlights.Business.DTOs.User;
 using BibliotecaDevlights.Business.Services.Interfaces;
+using BibliotecaDevlights.Data.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BibliotecaDevlights.API.Controllers
 {
@@ -48,6 +51,21 @@ namespace BibliotecaDevlights.API.Controllers
             }
 
             return Created(nameof(Register), user);
+        }
+
+        [HttpGet("is-admin")]
+        [Authorize]
+        public async Task<ActionResult<bool>> IsAdmin()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+            {
+                return Unauthorized(new { message = "Usuario no autenticado" });
+            }
+
+            var role = await _authService.GetUserRole(userId);
+            return Ok(role == UserRole.Admin);
         }
     }
 }

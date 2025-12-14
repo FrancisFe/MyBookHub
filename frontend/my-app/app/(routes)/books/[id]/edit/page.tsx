@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-'use client';
-import { updateBookAction } from "@/features/books/actions/bookActions";
+"use client";
+import { updateBookAction } from "@/features/books/services/bookActions";
 import { getBookById } from "@/features/books/services/bookService";
 import { UpdateBookDTO } from "@/features/types/book";
 import { useParams, useRouter } from "next/navigation";
@@ -21,15 +21,14 @@ const updateBookForm: UpdateBookDTO = {
 };
 
 export default function EditBookPage() {
-  const params = useParams(); 
-  const bookId = params.id as string; 
-  
+  const params = useParams();
+  const bookId = params.id as string;
+
   const [formData, setFormData] = useState<UpdateBookDTO>(updateBookForm);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
   const router = useRouter();
-
 
   useEffect(() => {
     const loadBook = async () => {
@@ -45,8 +44,12 @@ export default function EditBookPage() {
           stockRental: book.stockRental,
           imageUrl: book.imageUrl || "",
           publishedDate: book.publishedDate,
-          authorId: typeof book.author === 'string' ? book.author : book.author.id,
-          categoryId: typeof book.category === 'string' ? book.category : book.category.id,
+          authorId:
+            typeof book.author === "string" ? book.author : book.author.id,
+          categoryId:
+            typeof book.category === "string"
+              ? book.category
+              : book.category.id,
         });
       } catch (err) {
         setError("Error al cargar el libro");
@@ -64,7 +67,7 @@ export default function EditBookPage() {
     setLoading(true);
 
     try {
-      const result = await updateBookAction(bookId, formData); 
+      const result = await updateBookAction(bookId, formData);
 
       if (result.success && result.data?.id) {
         router.push(`/books/${result.data.id}`);
@@ -79,15 +82,17 @@ export default function EditBookPage() {
   };
 
   if (loadingData) {
-    return <div className="min-h-screen flex items-center justify-center">Cargando...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Cargando...
+      </div>
+    );
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-3xl font-bold mb-6 text-center">
-          Editar libro
-        </h1>
+        <h1 className="text-3xl font-bold mb-6 text-center">Editar libro</h1>
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 p-4 rounded mb-4">
             {error}
@@ -220,7 +225,6 @@ export default function EditBookPage() {
               onChange={(e) =>
                 setFormData({ ...formData, imageUrl: e.target.value })
               }
-              required
               className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
               placeholder="URL de la imagen del libro"
             />
