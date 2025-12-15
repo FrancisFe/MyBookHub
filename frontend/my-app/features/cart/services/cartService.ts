@@ -1,3 +1,4 @@
+"use server";
 import { Cart } from "@/features/types/cart";
 import { env } from "@/config/env";
 import { getAuthToken } from "@/lib/auth";
@@ -25,7 +26,7 @@ export const getCart = async (): Promise<Cart> => {
  */
 export const getCartItemCount = async (): Promise<number> => {
   const token = await getAuthToken();
-  const response = await fetch(`${url}/count`, {
+  const response = await fetch(`${url}/item-count`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

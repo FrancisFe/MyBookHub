@@ -4,6 +4,8 @@ export interface CartItem{
     bookId: string;
     quantity: number;
     unitPrice: number;
+    type: 'Purchase' | 'Rental';
+    availableStock: number;
     createdAt: string;
     updatedAt: string;
 

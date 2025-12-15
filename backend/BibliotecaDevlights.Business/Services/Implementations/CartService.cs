@@ -72,7 +72,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
                 ? type
                 : TransactionType.Purchase;
 
-            var existingItem = await _cartRepository.GetCartItemAsync(cart.Id, addToCartDto.BookId);
+            var existingItem = await _cartRepository.GetCartItemAsync(cart.Id, addToCartDto.BookId, transactionType);
             if (existingItem != null)
             {
                 var newQuantity = existingItem.Quantity + addToCartDto.Quantity;
@@ -183,7 +183,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
             var cart = await _cartRepository.GetCartByUserIdAsync(userId);
             if (cart != null)
             {
-                var existingItem = await _cartRepository.GetCartItemAsync(cart.Id, bookId);
+                var existingItem = await _cartRepository.GetCartItemAsync(cart.Id, bookId, transactionType);
                 if (existingItem != null)
                 {
                     var totalQuantity = existingItem.Quantity + quantity;

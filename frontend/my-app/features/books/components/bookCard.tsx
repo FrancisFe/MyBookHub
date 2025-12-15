@@ -1,75 +1,96 @@
 /* eslint-disable @next/next/no-img-element */
-// Server Component
+"use client";
+
 import Link from 'next/link';
 import { BookDTO } from '@/features/types/book';
+import { ShoppingBag, Calendar, Tag, User, Eye, Edit } from 'lucide-react';
 
 interface BookCardProps {
-  book:  BookDTO;
+  book: BookDTO;
 }
 
 export default function BookCard({ book }: BookCardProps) {
-  const hasPurchaseStock = book.stockPurchase > 0;
-  const hasRentalStock = book.stockRental > 0;
-
+  
   return (
-    <div className="border rounded-lg overflow-hidden hover:shadow-lg transition bg-blue">
+    <div className="group bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl overflow-hidden border border-gray-700 hover:border-gray-600 transition-all duration-300 hover:shadow-xl">
       {/* Imagen del libro */}
-      {book.imageUrl && (
-        <div className="w-full h-48 bg-gray-200 overflow-hidden">
-          <img
-            src={book.imageUrl}
-            alt={book. title}
-            className="w-full h-full object-cover hover:scale-105 transition"
+      {book.imageUrl ? (
+        <div className="relative h-48 overflow-hidden">
+          <img 
+            src={book.imageUrl} 
+            alt={book.title} 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent"></div>
+        </div>
+      ) : (
+        <div className="h-48 bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-12 h-16 bg-gray-600 rounded mx-auto mb-2"></div>
+            <p className="text-gray-400 text-sm">Sin imagen</p>
+          </div>
         </div>
       )}
 
-      <div className="p-4 flex flex-col h-full">
-        {/* Título y Autor */}
-        <h3 className="text-lg font-bold truncate">{book.title}</h3>
-        <p className="text-sm text-gray-600">{book.authorName}</p>
-        <p className="text-xs text-gray-500">{book.categoryName}</p>
+      <div className="p-5">
+        {/* Título */}
+        <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">
+          {book.title}
+        </h3>
 
-        {/* Precios */}
-        <div className="mt-3 flex justify-between text-sm">
-          <div>
-            <p className="text-gray-600">Compra</p>
-            <p className="font-bold text-lg">${book. purchasePrice}</p>
+        {/* Información del libro */}
+        <div className="space-y-2 mb-4">
+          <div className="flex items-center gap-2">
+            <User className="w-4 h-4 text-gray-400" />
+            <p className="text-gray-300 text-sm">{book.authorName}</p>
           </div>
-          <div>
-            <p className="text-gray-600">Renta/día</p>
-            <p className="font-bold text-lg">${book.rentalPricePerDay}</p>
+          
+          <div className="flex items-center gap-2">
+            <Tag className="w-4 h-4 text-gray-400" />
+            <p className="text-gray-400 text-xs">{book.categoryName}</p>
           </div>
         </div>
 
-        {/* Stock */}
-        <div className="mt-3 flex gap-2 text-xs">
-          {hasPurchaseStock && (
-            <span className="bg-green-100 text-green-800 px-2 py-1 rounded">
-              Compra:  {book.stockPurchase}
-            </span>
-          )}
-          {hasRentalStock && (
-            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
-              Renta: {book.stockRental}
-            </span>
-          )}
+        {/* Precios y Stock - SIMPLIFICADO */}
+        <div className="grid grid-cols-2 gap-4 mb-5">
+          <div className="bg-gray-800/50 rounded-lg p-3">
+            <div className="flex items-center gap-2 mb-1">
+              <ShoppingBag className="w-4 h-4 text-green-400" />
+              <p className="text-gray-400 text-xs">Compra</p>
+            </div>
+            <p className="font-bold text-lg text-white">${book.purchasePrice}</p>
+            <p className="text-xs text-gray-400 mt-1">
+              Stock: {book.stockPurchase}
+            </p>
+          </div>
+          
+          <div className="bg-gray-800/50 rounded-lg p-3">
+            <div className="flex items-center gap-2 mb-1">
+              <Calendar className="w-4 h-4 text-blue-400" />
+              <p className="text-gray-400 text-xs">Renta/día</p>
+            </div>
+            <p className="font-bold text-lg text-white">${book.rentalPricePerDay}</p>
+            <p className="text-xs text-gray-400 mt-1">
+              Stock: {book.stockRental}
+            </p>
+          </div>
         </div>
 
-        {/* Botones */}
-        <div className="mt-4 flex gap-2">
-          <Link
+        {/* Botones - CON BOTÓN DE DETALLES */}
+        <div className="flex gap-2">
+          <Link 
             href={`/books/${book.id}`}
-            className="flex-1 bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600 transition text-sm"
+            className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 transition-all duration-300"
           >
-            Ver Detalle
+            <Eye className="w-4 h-4" />
+            <span>Ver Detalles</span>
           </Link>
-
-          <Link
+          {}
+          <Link 
             href={`/books/${book.id}/edit`}
-            className="flex-1 bg-yellow-500 text-white text-center py-2 rounded hover: bg-yellow-600 transition text-sm"
+            className="px-4 flex items-center justify-center gap-2 bg-gradient-to-r from-gray-700 to-gray-800 text-gray-300 py-3 rounded-lg font-medium hover:from-gray-600 hover:to-gray-700 transition-all duration-300"
           >
-            Editar
+            <Edit className="w-4 h-4" />
           </Link>
         </div>
       </div>

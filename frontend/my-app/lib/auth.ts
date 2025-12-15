@@ -77,3 +77,13 @@ export async function getCurrentUser(): Promise<{
     name: decoded.name,
   };
 }
+
+export async function getCurrentUserId(): Promise<string | null> {
+  const token = await getAuthToken();
+  if (!token) return null;
+
+  const decoded = await decodeToken(token);
+  if (!decoded) return null;
+
+  return decoded.sub;
+}

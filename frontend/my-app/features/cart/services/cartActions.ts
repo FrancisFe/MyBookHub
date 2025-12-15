@@ -21,7 +21,7 @@ export const addItemToCartAction = async (
       return { success: false, message: "No autenticado" };
     }
 
-    const response = await fetch(`${url}/add`, {
+    const response = await fetch(`${url}/items`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export const addItemToCartAction = async (
 
     const data = await response.json();
     revalidatePath("/cart");
-
+    console.log("Item agregado al carrito:", data);
     return { success: true, message: "Item agregado", data };
   } catch (error) {
     return {
@@ -60,13 +60,14 @@ export const updateCartItemAction = async (
       return { success: false, message: "No autenticado" };
     }
 
-    const response = await fetch(`${url}/update/${itemId}`, {
+    const response = await fetch(`${url}/items/${itemId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ quantity }),
+
+      body: JSON.stringify(quantity),
     });
 
     if (!response.ok) throw new Error(`Error: ${response.status}`);
@@ -95,7 +96,7 @@ export const removeItemFromCartAction = async (
       return { success: false, message: "No autenticado" };
     }
 
-    const response = await fetch(`${url}/remove/${itemId}`, {
+    const response = await fetch(`${url}/items/${itemId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -127,7 +128,7 @@ export const clearCartAction = async (): Promise<{
       return { success: false, message: "No autenticado" };
     }
 
-    const response = await fetch(`${url}/clear`, {
+    const response = await fetch(`${url}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

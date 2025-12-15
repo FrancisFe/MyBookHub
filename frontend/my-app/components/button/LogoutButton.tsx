@@ -1,6 +1,7 @@
 "use client";
 import { clearAuthToken } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   className?: string;
@@ -8,12 +9,15 @@ interface Props {
 }
 
 export function LogoutButton({ className, fullWidth }: Props) {
+  const queryClient = useQueryClient();
   const baseClasses =
     "inline-flex items-center justify-center rounded bg-blue-500 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-600 transition cursor-pointer";
   const widthClasses = fullWidth ? " w-full" : "";
   const extraClasses = className ? ` ${className}` : "";
-  const handleLogout = () => {
-    clearAuthToken();
+  const handleLogout = async () => {
+    // Limpiar todo el cache de React Query
+    queryClient.clear();
+    await clearAuthToken();
     redirect("/");
   };
 

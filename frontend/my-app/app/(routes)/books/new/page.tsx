@@ -3,6 +3,8 @@ import { createBookAction } from "@/features/books/services/bookActions";
 import { CreateBookDTO } from "@/features/types/book";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { PlusCircle, ArrowLeft, Loader2 } from "lucide-react";
+
 const initialForm: CreateBookDTO = {
   title: "",
   isbn: "",
@@ -29,7 +31,7 @@ export default function NewBookPage() {
     setError("");
     setLoading(true);
 
-     try {
+    try {
       const result = await createBookAction(formData);
 
       if (!result.success) {
@@ -46,202 +48,309 @@ export default function NewBookPage() {
       setLoading(false);
     }
   };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-3xl font-bold mb-6 text-center">
-          Agregar nuevo libro
-        </h1>
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 p-4 rounded mb-4">
-            {error}
-          </div>
-        )}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Título
-            </label>
-            <input
-              type="text"
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-              required
-              className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-              placeholder="Título del libro"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              ISBN
-            </label>
-            <input
-              type="text"
-              value={formData.isbn}
-              onChange={(e) =>
-                setFormData({ ...formData, isbn: e.target.value })
-              }
-              required
-              className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-              placeholder="ISBN del libro"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Descripción
-            </label>
-            <input
-              type="text"
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-              placeholder="Descripción del libro"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Precio de compra
-            </label>
-            <input
-              type="number"
-              value={formData.purchasePrice}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  purchasePrice: Number(e.target.value),
-                })
-              }
-              required
-              className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-              placeholder="Precio de compra del libro"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Precio de alquiler por día
-            </label>
-            <input
-              type="number"
-              value={formData.rentalPricePerDay}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  rentalPricePerDay: Number(e.target.value),
-                })
-              }
-              required
-              className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-              placeholder="Precio de alquiler por día del libro"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Stock de compra
-            </label>
-            <input
-              type="number"
-              value={formData.stockPurchase}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  stockPurchase: Number(e.target.value),
-                })
-              }
-              required
-              className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-              placeholder="Stock de compra del libro"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Stock de alquiler
-            </label>
-            <input
-              type="number"
-              value={formData.stockRental}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  stockRental: Number(e.target.value),
-                })
-              }
-              required
-              className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-              placeholder="Stock de alquiler del libro"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Imagen del libro (URL)
-            </label>
-            <input
-              type="text"
-              value={formData.imageUrl}
-              onChange={(e) =>
-                setFormData({ ...formData, imageUrl: e.target.value })
-              }
-              required
-              className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-              placeholder="URL de la imagen del libro"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Fecha de publicación
-            </label>
-            <input
-              type="date"
-              value={formData.publishedDate}
-              onChange={(e) =>
-                setFormData({ ...formData, publishedDate: e.target.value })
-              }
-              required
-              className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-              placeholder="Fecha de publicación del libro"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Autor ID
-            </label>
-            <input
-              type="text"
-              value={formData.authorId}
-              onChange={(e) =>
-                setFormData({ ...formData, authorId: e.target.value })
-              }
-              required
-              className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-              placeholder="ID del autor del libro"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Category ID
-            </label>
-            <input
-              type="text"
-              value={formData.categoryId}
-              onChange={(e) =>
-                setFormData({ ...formData, categoryId: e.target.value })
-              }
-              required
-              className="w-full px-4 py-2 text-gray-700 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-              placeholder="ID de la categoría del libro"
-            />
-          </div>
+    <div className="min-h-screen p-4 sm:p-6">
+      <div className="max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
           <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-500 text-white font-semibold py-2 rounded hover:bg-blue-600 disabled:opacity-50 transition"
+            onClick={() => router.back()}
+            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors"
           >
-            {loading ? "Creando Libro" : "Crear Libro"}
+            <ArrowLeft className="w-5 h-5" />
+            Volver
           </button>
-        </form>
+          
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-gradient-to-br from-blue-900/20 to-purple-900/20 rounded-lg">
+              <PlusCircle className="w-8 h-8 text-blue-400" />
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">
+              Nuevo Libro
+            </h1>
+          </div>
+          <p className="text-gray-400">
+            Completa los detalles para agregar un nuevo libro al catálogo
+          </p>
+        </div>
+
+        {/* Formulario */}
+        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 p-6">
+          {error && (
+            <div className="mb-6 p-4 bg-gradient-to-r from-red-900/20 to-red-800/10 border border-red-800/30 rounded-xl">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-red-900/30 rounded-full flex items-center justify-center">
+                  <span className="text-red-400">!</span>
+                </div>
+                <p className="text-red-300">{error}</p>
+              </div>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Información básica */}
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
+                Información básica
+              </h2>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    Título *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
+                    required
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                    placeholder="Título del libro"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    ISBN *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.isbn}
+                    onChange={(e) =>
+                      setFormData({ ...formData, isbn: e.target.value })
+                    }
+                    required
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                    placeholder="ISBN del libro"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  Descripción
+                </label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  rows={3}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors resize-none"
+                  placeholder="Breve descripción del libro"
+                />
+              </div>
+            </div>
+
+            {/* Precios y Stock */}
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
+                Precios y disponibilidad
+              </h2>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    Precio de compra *
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                      $
+                    </span>
+                    <input
+                      type="number"
+                      value={formData.purchasePrice}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          purchasePrice: Number(e.target.value),
+                        })
+                      }
+                      required
+                      min="0"
+                      step="0.01"
+                      className="w-full pl-8 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                      placeholder="0.00"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    Precio de renta/día *
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                      $
+                    </span>
+                    <input
+                      type="number"
+                      value={formData.rentalPricePerDay}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          rentalPricePerDay: Number(e.target.value),
+                        })
+                      }
+                      required
+                      min="0"
+                      step="0.01"
+                      className="w-full pl-8 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                      placeholder="0.00"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    Stock compra *
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.stockPurchase}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        stockPurchase: Number(e.target.value),
+                      })
+                    }
+                    required
+                    min="0"
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                    placeholder="0"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    Stock renta *
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.stockRental}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        stockRental: Number(e.target.value),
+                      })
+                    }
+                    required
+                    min="0"
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                    placeholder="0"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Multimedia y relaciones */}
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
+                Multimedia y relaciones
+              </h2>
+              
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">
+                  URL de la imagen *
+                </label>
+                <input
+                  type="text"
+                  value={formData.imageUrl}
+                  onChange={(e) =>
+                    setFormData({ ...formData, imageUrl: e.target.value })
+                  }
+                  required
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                  placeholder="https://ejemplo.com/imagen.jpg"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    Fecha de publicación *
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.publishedDate}
+                    onChange={(e) =>
+                      setFormData({ ...formData, publishedDate: e.target.value })
+                    }
+                    required
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    ID del autor *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.authorId}
+                    onChange={(e) =>
+                      setFormData({ ...formData, authorId: e.target.value })
+                    }
+                    required
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                    placeholder="ID del autor"
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className="block text-gray-300 text-sm font-medium mb-2">
+                    ID de la categoría *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.categoryId}
+                    onChange={(e) =>
+                      setFormData({ ...formData, categoryId: e.target.value })
+                    }
+                    required
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                    placeholder="ID de la categoría"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Botón de envío */}
+            <div className="pt-4 border-t border-gray-700">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Creando libro...
+                  </>
+                ) : (
+                  <>
+                    <PlusCircle className="w-5 h-5" />
+                    Crear Libro
+                  </>
+                )}
+              </button>
+              
+              <p className="text-gray-500 text-sm text-center mt-4">
+                Todos los campos marcados con * son obligatorios
+              </p>
+            </div>
+          </form>
+        </div>
+
+        {/* Nota */}
+        <div className="mt-6 p-4 bg-gray-800/30 rounded-xl border border-gray-700">
+          <p className="text-gray-400 text-sm text-center">
+            El libro será agregado al catálogo inmediatamente después de la creación
+          </p>
+        </div>
       </div>
     </div>
   );

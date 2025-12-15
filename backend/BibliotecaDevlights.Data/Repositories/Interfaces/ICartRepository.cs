@@ -1,4 +1,5 @@
 ﻿using BibliotecaDevlights.Data.Entities;
+using BibliotecaDevlights.Data.Enums;
 
 namespace BibliotecaDevlights.Data.Repositories.Interfaces
 {
@@ -9,7 +10,7 @@ namespace BibliotecaDevlights.Data.Repositories.Interfaces
         Task ClearCartAsync(int userId);
 
         // ===== CART ITEMS =====
-        Task<CartItem?> GetCartItemAsync(int cartId, int bookId);
+        Task<CartItem?> GetCartItemAsync(int cartId, int bookId, TransactionType type);
         Task AddItemToCartAsync(CartItem cartItem);
         Task UpdateCartItemQuantityAsync(int cartItemId, int quantity);
         Task RemoveItemFromCartAsync(int cartItemId);

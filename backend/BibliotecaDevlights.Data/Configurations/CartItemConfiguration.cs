@@ -39,7 +39,7 @@ namespace BibliotecaDevlights.Data.Configurations
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Índices
-            builder.HasIndex(ci => new { ci.CartId, ci.BookId })
+            builder.HasIndex(ci => new { ci.CartId, ci.BookId , ci.Type })
                 .IsUnique();
 
             builder.ToTable("CartItems");

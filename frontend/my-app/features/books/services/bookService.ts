@@ -59,7 +59,7 @@ export const getBookById = async (id: string): Promise<BookDetailsDTO> => {
 export const searchBooks = async (query: string): Promise<BookDTO[]> => {
   try {
     const response = await fetch(
-      `${url}/search?q=${encodeURIComponent(query)}`,
+      `${url}/search?query=${encodeURIComponent(query)}`,
       {
         method: "GET",
         headers: {

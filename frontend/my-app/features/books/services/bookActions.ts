@@ -5,6 +5,7 @@ import { CreateBookDTO, UpdateBookDTO, BookResponse } from "../../types/book";
 import { revalidatePath } from "next/cache";
 import { env } from "../../../config/env";
 import { getAuthToken } from "../../../lib/auth";
+import { isUserAdmin } from "@/features/auth/services/authService";
 
 /**
  * Crear un nuevo libro
@@ -19,6 +20,10 @@ export const createBookAction = async (
         success: false,
         message: "No autenticado. Por favor inicia sesión.",
       };
+    }
+    const admin = await isUserAdmin();
+    if (!admin) {
+      return { success: false, message: "No autorizado: requiere rol admin." };
     }
     const response = await fetch(
       `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/book`,
@@ -76,6 +81,10 @@ export const updateBookAction = async (
         message: "No autenticado. Por favor inicia sesión.",
       };
     }
+    const admin = await isUserAdmin();
+    if (!admin) {
+      return { success: false, message: "No autorizado: requiere rol admin." };
+    }
     const response = await fetch(
       `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/book/${id}`,
       {
@@ -123,6 +132,10 @@ export const deleteBookAction = async (
         success: false,
         message: "No autenticado. Por favor inicia sesión.",
       };
+    }
+    const admin = await isUserAdmin();
+    if (!admin) {
+      return { success: false, message: "No autorizado: requiere rol admin." };
     }
     const response = await fetch(
       `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/book/${id}`,

@@ -51,9 +51,9 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
             return await _context.CartItems.Where(ci => ci.CartId == cartId).AsNoTracking().ToListAsync();
         }
 
-        public async Task<CartItem?> GetCartItemAsync(int cartId, int bookId)
+        public async Task<CartItem?> GetCartItemAsync(int cartId, int bookId, TransactionType type)
         {
-            return await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == cartId && ci.BookId == bookId);
+            return await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == cartId && ci.BookId == bookId && ci.Type == type);
         }
         public async Task AddItemToCartAsync(CartItem cartItem)
         {
@@ -109,7 +109,7 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
                 if (ci.Type == TransactionType.Rental && ci.RentalStartDate.HasValue && ci.RentalEndDate.HasValue)
                 {
                     int rentalDays = (ci.RentalEndDate.Value - ci.RentalStartDate.Value).Days;
-                    rentalDays = Math.Max(rentalDays, 1); 
+                    rentalDays = Math.Max(rentalDays, 1);
 
                     total += ci.Book!.RentalPricePerDay * rentalDays * ci.Quantity;
                 }
@@ -121,8 +121,5 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
 
             return total;
         }
-
-
-
     }
 }
