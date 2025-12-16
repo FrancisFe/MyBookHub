@@ -2,6 +2,7 @@ export interface OrderItems{
     id:string;
     orderId:string;
     bookId:string;
+    bookTitle:string;
     quantity:number;
     price:number;
     type:string;

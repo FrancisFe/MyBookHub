@@ -21,7 +21,6 @@ export default function OrderConfirmationPage() {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          router.push("/orders/my-orders");
           return 0;
         }
         return prev - 1;
@@ -30,6 +29,12 @@ export default function OrderConfirmationPage() {
 
     return () => clearInterval(timer);
   }, [orderId, router]);
+
+  useEffect(() => {
+    if(countdown === 0){
+      router.push("/orders/my-orders");
+    }
+  }, [countdown, router]);
 
   if (!orderId) {
     return (

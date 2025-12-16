@@ -3,7 +3,7 @@ import { LoginButton } from "@/components/button/LoginButton";
 import { CartButton } from "./CartButton";
 import { isAuthenticated } from "@/lib/auth";
 import { LogoutButton } from "../button/LogoutButton";
-import { Home, BookOpen, Phone} from "lucide-react";
+import { Home, BookOpen, Phone, PackageOpen } from "lucide-react";
 
 const navItems = [
   {
@@ -64,6 +64,17 @@ export default async function Navbar() {
           <div className="flex items-center space-x-4">
             {/* Carrito */}
             {authenticated && <CartButton />}
+
+            {/* Mis Órdenes */}
+            {authenticated && (
+              <Link
+                href="/orders/my-orders"
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+              >
+                <PackageOpen className="w-4 h-4" />
+                <span className="font-medium hidden sm:inline">Mis Órdenes</span>
+              </Link>
+            )}
 
             {/* Separador */}
             {authenticated && <div className="h-6 w-px bg-gray-700"></div>}

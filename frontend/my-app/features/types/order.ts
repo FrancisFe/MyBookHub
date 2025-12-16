@@ -10,6 +10,7 @@ export interface Order{
 }
 
 export interface OrderDto{
+    id:string;
     userId:string;
     orderDate:string;
     totalAmount:number;

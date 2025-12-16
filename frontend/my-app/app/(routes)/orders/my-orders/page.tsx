@@ -5,20 +5,17 @@ import Link from "next/link";
 export default async function MyOrdersPage() {
   const orders = await getMyOrders();
 
-  // Normalizar tipo de item (Purchase/Rental) desde string o enum numérico
+
   const getItemType = (type: unknown): { label: string; colorClass: string } => {
     const t = String(type).toLowerCase();
-    // Map posibles valores
-    // Numéricos: 0=Purchase, 1=Rental (ajusta si tu enum difiere)
+
     const isPurchase = t === "purchase" || t === "compra" || t === "0";
     const isRental = t === "rental" || t === "renta" || t === "1";
     if (isPurchase) return { label: "Compra", colorClass: "text-green-400" };
     if (isRental) return { label: "Renta", colorClass: "text-blue-400" };
-    // Fallback por si llega algo inesperado
     return { label: t || "Desconocido", colorClass: "text-gray-400" };
   };
 
-  // Traducción y color de estados (Pending=0, Paid=1, Completed=2, Cancelled=3)
   const getStatusInfo = (status: string | number) => {
     const s = Number(status);
     const statusMap: Record<number, { label: string; colorClass: string }> = {
@@ -86,7 +83,7 @@ export default async function MyOrdersPage() {
                     </div>
                     <div>
                       <p className="text-white font-semibold">
-                        Orden #{order.userId}
+                        Orden # {order.id}
                       </p>
                       <div className="flex items-center gap-2 text-gray-400 text-sm">
                         <Calendar className="w-4 h-4" />
@@ -134,7 +131,7 @@ export default async function MyOrdersPage() {
                         >
                           <div className="flex-1">
                             <p className="text-white font-medium mb-1">
-                              Libro ID: {item.bookId}
+                              {item.bookTitle}
                             </p>
                             <div className="flex items-center gap-4 text-sm text-gray-400">
                               <span>Cantidad: {item.quantity}</span>
@@ -153,7 +150,7 @@ export default async function MyOrdersPage() {
                             <p className="text-white font-semibold">
                               ${item.price.toFixed(2)}
                             </p>
-                            <p className="text-gray-500 text-xs">
+                            <p className="text-gray-500 text-xs mt-1">
                               Subtotal: $
                               {(item.price * item.quantity).toFixed(2)}
                             </p>
