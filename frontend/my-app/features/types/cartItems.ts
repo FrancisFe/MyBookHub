@@ -19,4 +19,6 @@ export interface AddToCartDTO {
     bookId: string;
     quantity: number;
     type: 'Purchase' | 'Rental';
+    rentalStartDate?: string;
+    rentalEndDate?: string;
 }

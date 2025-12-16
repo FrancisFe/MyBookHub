@@ -63,7 +63,7 @@ namespace BibliotecaDevlights.Business.Services.Implementations
 
         public async Task<PaymentResultDto> SimulateFailedPaymentAsync(int orderId)
         {
-            await _orderService.UpdateOrderStatusAsync(orderId, OrderStatus.Rejected);
+            await _orderService.UpdateOrderStatusAsync(orderId, OrderStatus.Cancelled);
             return new PaymentResultDto
             {
                 IsSuccess = false,

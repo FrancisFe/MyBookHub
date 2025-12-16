@@ -15,7 +15,7 @@ export const getBooks = async (): Promise<BookDTO[]> => {
       headers: {
         "Content-Type": "application/json",
       },
-      next: { revalidate: 60 },
+      next: { revalidate: 0, tags: ['books'] },
     });
 
     if (!response.ok) {
@@ -38,7 +38,7 @@ export const getBookById = async (id: string): Promise<BookDetailsDTO> => {
       headers: {
         "Content-Type": "application/json",
       },
-      next: { revalidate: 60 },
+      next: { revalidate: 0, tags: ['books', `book-${id}`] },
     });
 
     if (!response.ok) {
@@ -65,6 +65,7 @@ export const searchBooks = async (query: string): Promise<BookDTO[]> => {
         headers: {
           "Content-Type": "application/json",
         },
+        next: { revalidate: 0, tags: ['books'] },
       }
     );
 

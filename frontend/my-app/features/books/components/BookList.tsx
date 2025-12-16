@@ -1,9 +1,11 @@
 import { getBooks, searchBooks } from '@/features/books/services/bookService';
 import BookCard from './bookCard';
 import { BookOpen, SearchX, Library } from 'lucide-react';
+import { isAdmin } from '@/lib/auth';
 
 export default async function BookList({ query = '' }: { query?: string }) {
   const books = query ? await searchBooks(query) : await getBooks();
+  const userIsAdmin = await isAdmin();
 
   if (!books || books.length === 0) {
     return (
@@ -71,7 +73,7 @@ export default async function BookList({ query = '' }: { query?: string }) {
       {/* Grid de libros */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
         {books.map((book) => (
-          <BookCard key={book.id} book={book} />
+          <BookCard key={book.id} book={book} isAdmin={userIsAdmin} />
         ))}
       </div>
     </div>

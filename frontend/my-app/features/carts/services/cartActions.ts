@@ -37,7 +37,6 @@ export const addItemToCartAction = async (
 
     const data = await response.json();
     revalidatePath("/cart");
-    console.log("Item agregado al carrito:", data);
     return { success: true, message: "Item agregado", data };
   } catch (error) {
     return {

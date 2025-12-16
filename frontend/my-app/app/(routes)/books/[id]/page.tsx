@@ -130,27 +130,9 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
                 <h3 className="text-xl font-semibold text-white">Compra</h3>
               </div>
               
-              <div className="space-y-4">
-                <div>
-                  <p className="text-gray-400 text-sm mb-1">Precio</p>
-                  <p className="text-3xl font-bold text-white">${book.purchasePrice}</p>
-                </div>
-                
-                <div>
-                  <p className="text-gray-400 text-sm mb-1">Disponibilidad</p>
-                  <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${
-                    book.stockPurchase > 0 
-                      ? 'bg-gradient-to-r from-green-900/20 to-emerald-900/10 text-green-400 border border-green-800/30'
-                      : 'bg-gradient-to-r from-red-900/20 to-red-900/10 text-red-400 border border-red-800/30'
-                  }`}>
-                    <div className={`w-2 h-2 rounded-full ${
-                      book.stockPurchase > 0 ? 'bg-green-500 animate-pulse' : 'bg-red-500'
-                    }`}></div>
-                    <span className="font-medium">
-                      {book.stockPurchase > 0 ? `${book.stockPurchase} unidades disponibles` : 'Agotado'}
-                    </span>
-                  </div>
-                </div>
+              <div>
+                <p className="text-gray-400 text-sm mb-1">Precio</p>
+                <p className="text-3xl font-bold text-white">${book.purchasePrice}</p>
               </div>
             </div>
 
@@ -165,27 +147,9 @@ export default async function BookDetailPage({ params }: BookDetailPageProps) {
                 <h3 className="text-xl font-semibold text-white">Renta</h3>
               </div>
               
-              <div className="space-y-4">
-                <div>
-                  <p className="text-gray-400 text-sm mb-1">Precio por día</p>
-                  <p className="text-3xl font-bold text-white">${book.rentalPricePerDay}</p>
-                </div>
-                
-                <div>
-                  <p className="text-gray-400 text-sm mb-1">Disponibilidad</p>
-                  <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${
-                    book.stockRental > 0 
-                      ? 'bg-gradient-to-r from-blue-900/20 to-cyan-900/10 text-blue-400 border border-blue-800/30'
-                      : 'bg-gradient-to-r from-red-900/20 to-red-900/10 text-red-400 border border-red-800/30'
-                  }`}>
-                    <div className={`w-2 h-2 rounded-full ${
-                      book.stockRental > 0 ? 'bg-blue-500 animate-pulse' : 'bg-red-500'
-                    }`}></div>
-                    <span className="font-medium">
-                      {book.stockRental > 0 ? `${book.stockRental} unidades disponibles` : 'Agotado'}
-                    </span>
-                  </div>
-                </div>
+              <div>
+                <p className="text-gray-400 text-sm mb-1">Precio por día</p>
+                <p className="text-3xl font-bold text-white">${book.rentalPricePerDay}</p>
               </div>
             </div>
           </div>

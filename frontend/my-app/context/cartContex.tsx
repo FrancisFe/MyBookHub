@@ -10,8 +10,8 @@ import {
   clearCartAction,
   removeItemFromCartAction,
   updateCartItemAction,
-} from "@/features/cart/services/cartActions";
-import { getCart } from "@/features/cart/services/cartService";
+} from "@/features/carts/services/cartActions";
+import { getCart } from "@/features/carts/services/cartService";
 
 type CartContextType = {
   cart: Cart | null;
@@ -80,10 +80,19 @@ export function CartProvider({ children, userId }: { children: ReactNode; userId
       return;
     }
 
+    // Para rentals, establecer automáticamente las fechas: hoy y hoy + 1 día
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
     const result = await addItemToCartAction({
       bookId: book.id,
       quantity: 1,
       type,
+      ...(type === "Rental" && {
+        rentalStartDate: today.toISOString().split('T')[0],
+        rentalEndDate: tomorrow.toISOString().split('T')[0],
+      }),
     });
 
     if (!result.success) {

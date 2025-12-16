@@ -21,9 +21,9 @@ namespace BibliotecaDevlight.Data.Seeders
             {
                 new User
                 {
-                    UserName = "admin",
-                    Email = "admin@bibliotecadevlights.com",
-                    PasswordHash = passwordHasher.HashPassword(null, "Admin123_"),
+                    UserName = "francis",
+                    Email = "franciss.cs@hotmail.com",
+                    PasswordHash = passwordHasher.HashPassword(null, "15545038"),
                     Role = UserRole.Admin,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow

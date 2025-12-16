@@ -3,16 +3,35 @@
 
 import Link from 'next/link';
 import { BookDTO } from '@/features/types/book';
-import { ShoppingBag, Calendar, Tag, User, Eye, Edit } from 'lucide-react';
+import { ShoppingBag, Calendar, Tag, User, Eye, Edit, AlertCircle } from 'lucide-react';
 
 interface BookCardProps {
   book: BookDTO;
+  isAdmin?: boolean;
 }
 
-export default function BookCard({ book }: BookCardProps) {
+export default function BookCard({ book, isAdmin = false }: BookCardProps) {
+  // Verificar si el libro tiene stock disponible
+  const hasStock = book.stockPurchase > 0 || book.stockRental > 0;
+  
+  // Si no tiene stock y el usuario no es admin, no mostrar el libro
+  if (!hasStock && !isAdmin) {
+    return null;
+  }
+
+  // Clases de opacidad si no tiene stock
+  const opacityClass = !hasStock ? "opacity-50" : "";
   
   return (
-    <div className="group bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl overflow-hidden border border-gray-700 hover:border-gray-600 transition-all duration-300 hover:shadow-xl">
+    <div className={`group bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl overflow-hidden border border-gray-700 hover:border-gray-600 transition-all duration-300 hover:shadow-xl ${opacityClass}`}>
+      {/* Badge de sin stock (solo para admin) */}
+      {!hasStock && isAdmin && (
+        <div className="absolute top-4 right-4 z-10 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+          <AlertCircle className="w-3 h-3" />
+          Sin Stock
+        </div>
+      )}
+      
       {/* Imagen del libro */}
       {book.imageUrl ? (
         <div className="relative h-48 overflow-hidden">

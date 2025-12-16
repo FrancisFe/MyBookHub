@@ -22,6 +22,7 @@ namespace BibliotecaDevlights.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<OrderSimpleDto>>> GetAllOrders()
         {
             var orders = await _orderService.GetAllOrdersAsync();
@@ -29,6 +30,7 @@ namespace BibliotecaDevlights.API.Controllers
         }
 
         [HttpGet("{orderId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<OrderDto?>> GetOrderById(int orderId)
         {
             var userId = _userContextService.GetUserId();
@@ -45,6 +47,7 @@ namespace BibliotecaDevlights.API.Controllers
         }
 
         [HttpGet("details")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetAllOrdersWithDetails()
         {
             var orders = await _orderService.GetAllOrdersWithDetailsAsync();
@@ -52,6 +55,7 @@ namespace BibliotecaDevlights.API.Controllers
         }
 
         [HttpGet("details/user/{userId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersByUserIdWithDetailsAsync(int userId)
         {
             var currentUserId = _userContextService.GetUserId();

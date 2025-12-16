@@ -86,6 +86,8 @@ namespace BibliotecaDevlights.Business.Services.Implementations
             };
 
             decimal totalAmount = 0;
+            bool hasAnyPurchase = false;
+            bool hasAnyRental = false;
 
             try
             {
@@ -110,25 +112,28 @@ namespace BibliotecaDevlights.Business.Services.Implementations
 
                     order.OrderItems!.Add(orderItem);
 
+                    var isPurchase = ci.Type == TransactionType.Purchase;
+
                     if (ci.Type == TransactionType.Rental && ci.RentalStartDate.HasValue && ci.RentalEndDate.HasValue)
                     {
                         int rentalDays = (ci.RentalEndDate.Value.Date - ci.RentalStartDate.Value.Date).Days;
                         rentalDays = Math.Max(rentalDays, 1);
                         totalAmount += ci.Price * ci.Quantity * rentalDays;
+                        hasAnyRental = true;
+                        book.StockRental -= ci.Quantity;
                     }
-                    else
+                    else if (isPurchase)
                     {
                         totalAmount += ci.Price * ci.Quantity;
-                    }
-
-                    var isPurchase = ci.Type == TransactionType.Purchase;
-                    if (isPurchase)
+                        hasAnyPurchase = true;
                         book.StockPurchase -= ci.Quantity;
-                    else
-                        book.StockRental -= ci.Quantity;
+                    }
 
                     await _bookRepository.UpdateAsync(book);
                 }
+
+                // Establecer el estado de la orden: solo Paid si es ÚNICAMENTE compras
+                order.Status = (hasAnyPurchase && !hasAnyRental) ? OrderStatus.Paid : OrderStatus.Pending;
 
                 order.TotalAmount = totalAmount;
                 await _orderRepository.AddAsync(order);

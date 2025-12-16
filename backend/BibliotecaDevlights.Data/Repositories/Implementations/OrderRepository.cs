@@ -33,6 +33,7 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
             return await _context.Orders.AsNoTracking()
                 .Where(o => o.UserId == userId)
                 .Include(o => o.OrderItems!)
+                .ThenInclude(b => b.Book)
                 .ToListAsync();
         }
 
@@ -49,9 +50,10 @@ namespace BibliotecaDevlights.Data.Repositories.Implementations
         {
             return await _context.Orders
                 .Include(u => u.User)
+                .Where(o => o.Id == orderId)
                 .Include(o => o.OrderItems!)
                 .ThenInclude(b => b.Book)
-                .FirstOrDefaultAsync(o => o.Id == orderId);
+                .FirstOrDefaultAsync();
         }
         public async Task AddAsync(Order order)
         {

@@ -11,7 +11,6 @@ interface AddToCartButtonProps {
 
 export function AddToCartButton({ book, type = "Purchase", label }: AddToCartButtonProps) {
   const { addToCart, items } = useCart();
-  // items contain cart item ids; we match by bookId AND type
   const cartItem = items.find((item) => item.bookId === book.id && item.type === type);
 
   const buttonLabel = label

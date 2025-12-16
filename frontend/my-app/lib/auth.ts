@@ -9,6 +9,8 @@ interface JWTPayload {
   sub: string;
   name: string;
   email: string;
+  role?: string;
+  "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"?: string;
   iat: number;
   exp: number;
 }
@@ -86,4 +88,20 @@ export async function getCurrentUserId(): Promise<string | null> {
   if (!decoded) return null;
 
   return decoded.sub;
+}
+
+export async function getUserRole(): Promise<string | null> {
+  const token = await getAuthToken();
+  if (!token) return null;
+
+  const decoded = await decodeToken(token);
+  if (!decoded) return null;
+
+  // El role puede venir en diferentes formatos dependiendo del claim
+  return decoded.role || decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] || null;
+}
+
+export async function isAdmin(): Promise<boolean> {
+  const role = await getUserRole();
+  return role === "Admin" || role === "1";
 }

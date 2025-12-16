@@ -1,12 +1,11 @@
 ﻿namespace BibliotecaDevlights.Data.Enums
 {
-    public enum OrderStatus
+       public enum OrderStatus
     {
-        Pending,
-        Approved,
-        Paid,
-        Rejected,
-        Completed,
-        Cancelled
+        Pending = 0,
+        Paid = 1,
+        Completed = 2,
+        Cancelled = 3
     }
 }
+
