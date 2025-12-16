@@ -5,6 +5,7 @@ import { isAdmin } from '@/lib/auth';
 
 export default async function BookList({ query = '' }: { query?: string }) {
   const books = query ? await searchBooks(query) : await getBooks();
+  
   const userIsAdmin = await isAdmin();
 
   if (!books || books.length === 0) {

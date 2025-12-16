@@ -2,8 +2,10 @@ import Link from "next/link";
 import { LoginButton } from "@/components/button/LoginButton";
 import { CartButton } from "./CartButton";
 import { isAuthenticated } from "@/lib/auth";
+import { isUserAdmin } from "@/features/auth/services/authService";
 import { LogoutButton } from "../button/LogoutButton";
-import { Home, BookOpen, Phone, PackageOpen } from "lucide-react";
+import { Home, BookOpen, Phone, PackageOpen, Shield } from "lucide-react";
+import AdminDropdown from "@/components/navbar/adminDropdown";
 
 const navItems = [
   {
@@ -25,6 +27,7 @@ const navItems = [
 
 export default async function Navbar() {
   const authenticated = await isAuthenticated();
+  const userAdmin = await isUserAdmin(); // ✅ Obtener si es admin
 
   return (
     <header className="w-full bg-gradient-to-r from-gray-900 to-black border-b border-gray-800">
@@ -57,6 +60,9 @@ export default async function Navbar() {
                   <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-4/5 transition-all duration-300"></span>
                 </Link>
               ))}
+              
+              {/* Dropdown Admin - Solo visible para admin */}
+              {userAdmin && <AdminDropdown />}
             </nav>
           </div>
 
@@ -83,6 +89,12 @@ export default async function Navbar() {
             <div className="flex items-center space-x-2">
               {authenticated ? (
                 <>
+                  {/* Badge de Admin en mobile */}
+                  {userAdmin && (
+                    <div className="md:hidden px-3 py-1 bg-gradient-to-r from-yellow-900/20 to-yellow-800/10 rounded-full border border-yellow-800/30">
+                      <span className="text-yellow-400 text-sm font-medium">Admin</span>
+                    </div>
+                  )}
                   <LogoutButton />
                 </>
               ) : (
@@ -110,6 +122,19 @@ export default async function Navbar() {
                 <span className="text-xs font-medium">{item.label}</span>
               </Link>
             ))}
+            
+            {/* Admin en mobile */}
+            {userAdmin && (
+              <Link
+                href="/authors"
+                className="flex flex-col items-center gap-1 px-3 py-2 text-yellow-400 hover:text-yellow-300 transition-colors"
+              >
+                <div className="p-2 bg-yellow-900/20 rounded-lg border border-yellow-800/30">
+                  <Shield className="w-4 h-4" />
+                </div>
+                <span className="text-xs font-medium">Admin</span>
+              </Link>
+            )}
           </div>
         </div>
       </div>

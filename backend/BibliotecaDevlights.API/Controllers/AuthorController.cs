@@ -15,36 +15,23 @@ namespace BibliotecaDevlights.API.Controllers
             _authorService = authorService;
         }
 
-        /// <summary>
-        /// Obtiene todos los autores
-        /// </summary>
+
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<AuthorDto>>> GetAll()
         {
             var authors = await _authorService.GetAllAsync();
             return Ok(authors);
         }
 
-        /// <summary>
-        /// Obtiene un autor por ID
-        /// </summary>
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<AuthorDto>> GetById(int id)
         {
             var author = await _authorService.GetByIdAsync(id);
             return Ok(author);
         }
 
-        /// <summary>
-        /// Crea un nuevo autor
-        /// </summary>
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<AuthorDto>> Create([FromBody] CreateAuthorDto createAuthor)
         {
             if (!ModelState.IsValid)
@@ -55,14 +42,9 @@ namespace BibliotecaDevlights.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = author.Id }, author);
         }
 
-        /// <summary>
-        /// Actualiza un autor existente
-        /// </summary>
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
         public async Task<ActionResult<AuthorDto>> Update(int id, [FromBody] UpdateAuthorDto updateAuthor)
         {
             if (!ModelState.IsValid)
@@ -73,13 +55,8 @@ namespace BibliotecaDevlights.API.Controllers
             return Ok(author);
         }
 
-        /// <summary>
-        /// Elimina un autor
-        /// </summary>
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete(int id)
         {
             await _authorService.DeleteAsync(id);

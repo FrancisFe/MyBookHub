@@ -69,4 +69,3 @@ export interface ApiResponse<T> {
 }
 
 export type BooksListResponse = ApiResponse<BookDTO[]>;
-export type BookResponse = ApiResponse<BookDTO>;

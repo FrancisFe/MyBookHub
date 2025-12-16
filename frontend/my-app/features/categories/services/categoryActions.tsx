@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
-
-import { CreateBookDTO, UpdateBookDTO } from "../../types/book";
-import { revalidatePath } from "next/cache";
-import { env } from "../../../config/env";
-import { getAuthToken } from "../../../lib/auth";
+import { env } from "@/config/env";
 import { isUserAdmin } from "@/features/auth/services/authService";
+import {
+  CreateCategoryDTO,
+  UpdateCategoryDTO,
+} from "@/features/types/category";
+import { getAuthToken } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
 
-const url = `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/book`;
-/**
- * Crear un nuevo libro
- */
-export const createBookAction = async (
-  bookData: CreateBookDTO
+const url = `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/category`;
+
+export const CreateCategoryAction = async (
+  categoryData: CreateCategoryDTO
 ): Promise<{ success: boolean; message: string; data?: any }> => {
   try {
     const token = await getAuthToken();
@@ -32,24 +32,26 @@ export const createBookAction = async (
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(bookData),
+      body: JSON.stringify(categoryData),
     });
-
     if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || "Error al crear el libro");
-  }
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message ||
+          `Error ${response.status}: Error al crear categoría`
+      );
+    }
 
-   const data = await response.json();
-    revalidatePath("/books");
+    const data = await response.json();
 
+      revalidatePath("/categories");
     return {
       success: true,
-      message: "Libro creado exitosamente",
+      message: "Categoría creada exitosamente",
       data: data,
     };
   } catch (error) {
-    console.error("Error creating book:", error);
+    console.error("Error creating category:", error);
     return {
       success: false,
       message: error instanceof Error ? error.message : "Error desconocido",
@@ -57,12 +59,9 @@ export const createBookAction = async (
   }
 };
 
-/**
- * Actualizar un libro
- */
-export const updateBookAction = async (
+export const UpdateCategoryAction = async (
   id: string,
-  bookData: UpdateBookDTO
+  categoryData: UpdateCategoryDTO
 ): Promise<{ success: boolean; message: string; data?: any }> => {
   try {
     const token = await getAuthToken();
@@ -73,6 +72,7 @@ export const updateBookAction = async (
       };
     }
     const admin = await isUserAdmin();
+
     if (!admin) {
       return { success: false, message: "No autorizado: requiere rol admin." };
     }
@@ -82,25 +82,25 @@ export const updateBookAction = async (
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(bookData),
+      body: JSON.stringify(categoryData),
     });
-
-    
     if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || "Error al actualizar el libro");
-  }
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `Error ${response.status}: Error al actualizar`
+      );
+    }
 
-   const data = await response.json();
-    revalidatePath(`/books/${id}`);
+    const data = await response.json();
 
+    revalidatePath("/categories");
     return {
       success: true,
-      message: "Libro actualizado exitosamente",
+      message: "Categoría actualizada exitosamente",
       data: data,
     };
   } catch (error) {
-    console.error(`Error updating book ${id}:`, error);
+    console.error("Error updating category:", error);
     return {
       success: false,
       message: error instanceof Error ? error.message : "Error desconocido",
@@ -108,10 +108,7 @@ export const updateBookAction = async (
   }
 };
 
-/**
- * Eliminar un libro
- */
-export const deleteBookAction = async (
+export const DeleteCategoryAction = async (
   id: string
 ): Promise<{ success: boolean; message: string }> => {
   try {
@@ -133,20 +130,20 @@ export const deleteBookAction = async (
         Authorization: `Bearer ${token}`,
       },
     });
-
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `Error: ${response.status}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message ||
+          `Error ${response.status}: Error al eliminar categoría`
+      );
     }
-
-    revalidatePath("/books");
-
+    revalidatePath("/categories");
     return {
       success: true,
-      message: "Libro eliminado exitosamente",
+      message: "Categoría eliminada exitosamente",
     };
   } catch (error) {
-    console.error(`Error deleting book ${id}:`, error);
+    console.error("Error deleting category:", error);
     return {
       success: false,
       message: error instanceof Error ? error.message : "Error desconocido",

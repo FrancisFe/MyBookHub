@@ -1,42 +1,42 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
 "use client";
-
-import { deleteBookAction } from "@/features/books/services/bookActions";
-import { getBookById } from "@/features/books/services/bookService";
+import { DeleteCategoryAction } from "@/features/categories/services/categoryActions";
+import { getCategoryById } from "@/features/categories/services/categoryService";
 import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { Trash2, ArrowLeft, AlertTriangle, CheckCircle, Loader2, BookOpen } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Trash2, ArrowLeft, AlertTriangle, CheckCircle, Loader2, Tag } from "lucide-react";
 
-export default function DeleteBookPage() {
+export default function DeleteCategoryPage() {
   const params = useParams();
-  const bookId = params.id as string;
+  const categoryId = params.id as string;
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  const [bookTitle, setBookTitle] = useState("");
+  const [categoryName, setCategoryName] = useState("");
 
   useEffect(() => {
-    const loadBook = async () => {
+    const loadCategory = async () => {
       try {
-        const book = await getBookById(bookId);
-        setBookTitle(book.title);
+        const category = await getCategoryById(categoryId);
+        setCategoryName(category.name);
       } catch (err) {
-        setError("Error al cargar el libro");
+        setError("Error al cargar la categoría");
       } finally {
         setLoadingData(false);
       }
     };
 
-    loadBook();
-  }, [bookId]);
+    loadCategory();
+  }, [categoryId]);
 
   useEffect(() => {
     if (success) {
       const timer = setTimeout(() => {
-        router.push("/books");
+        router.push("/categories");
       }, 2000);
       return () => clearTimeout(timer);
     }
@@ -47,12 +47,12 @@ export default function DeleteBookPage() {
     setLoading(true);
 
     try {
-      const result = await deleteBookAction(bookId);
+      const result = await DeleteCategoryAction(categoryId);
 
       if (result.success) {
         setSuccess(true);
       } else {
-        setError(result.message || "Error al eliminar el libro");
+        setError(result.message || "Error al eliminar la categoría");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error desconocido");
@@ -70,7 +70,7 @@ export default function DeleteBookPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-900">
         <div className="text-center">
           <Loader2 className="w-12 h-12 text-blue-400 animate-spin mx-auto mb-4" />
-          <p className="text-gray-400">Cargando libro...</p>
+          <p className="text-gray-400">Cargando categoría...</p>
         </div>
       </div>
     );
@@ -86,12 +86,12 @@ export default function DeleteBookPage() {
             </div>
             <h2 className="text-2xl font-bold text-white mb-2">¡Éxito!</h2>
             <p className="text-gray-300">
-              El libro <strong className="text-white">{bookTitle}</strong> ha sido eliminado correctamente.
+              La categoría <strong className="text-white">{categoryName}</strong> ha sido eliminada correctamente.
             </p>
           </div>
           <div className="mt-6 p-4 bg-gray-700/30 rounded-lg">
             <p className="text-gray-400 text-sm text-center">
-              Redirigiendo a la lista de libros...
+              Redirigiendo a la lista de categorías...
             </p>
           </div>
         </div>
@@ -105,10 +105,10 @@ export default function DeleteBookPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="w-20 h-20 bg-gradient-to-br from-red-900/20 to-red-800/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-800/30">
-            <BookOpen className="w-10 h-10 text-red-400" />
+            <Tag className="w-10 h-10 text-red-400" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-            Eliminar Libro
+            Eliminar Categoría
           </h1>
           <p className="text-gray-400 text-sm">
             Acción permanente e irreversible
@@ -129,17 +129,17 @@ export default function DeleteBookPage() {
             <div>
               <p className="text-white font-medium mb-1">¿Estás completamente seguro?</p>
               <p className="text-gray-400 text-sm">
-                Estás a punto de eliminar permanentemente el libro:
+                Estás a punto de eliminar permanentemente la categoría:
               </p>
             </div>
           </div>
           
           <div className="mt-4 p-4 bg-gray-700/30 rounded-lg">
             <p className="text-center text-xl font-bold text-white">
-              {bookTitle}
+              {categoryName}
             </p>
             <p className="text-center text-gray-400 text-sm mt-1">
-              ID: {bookId}
+              ID: {categoryId}
             </p>
           </div>
         </div>
@@ -154,11 +154,11 @@ export default function DeleteBookPage() {
             </li>
             <li className="flex items-center gap-2 text-gray-300">
               <div className="w-1.5 h-1.5 bg-red-500 rounded-full"></div>
-              <span>Todos los datos del libro se perderán</span>
+              <span>Todos los datos de la categoría se perderán</span>
             </li>
             <li className="flex items-center gap-2 text-gray-300">
               <div className="w-1.5 h-1.5 bg-red-500 rounded-full"></div>
-              <span>Se eliminarán registros relacionados</span>
+              <span>Si la categoria tiene un libro asociado no se podrá eliminar</span>
             </li>
           </ul>
         </div>

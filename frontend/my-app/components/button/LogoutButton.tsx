@@ -15,7 +15,6 @@ export function LogoutButton({ className, fullWidth }: Props) {
   const widthClasses = fullWidth ? " w-full" : "";
   const extraClasses = className ? ` ${className}` : "";
   const handleLogout = async () => {
-    // Limpiar todo el cache de React Query
     queryClient.clear();
     await clearAuthToken();
     redirect("/");

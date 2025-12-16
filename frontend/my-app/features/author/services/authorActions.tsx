@@ -1,18 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { CreateBookDTO, UpdateBookDTO } from "../../types/book";
-import { revalidatePath } from "next/cache";
-import { env } from "../../../config/env";
-import { getAuthToken } from "../../../lib/auth";
+import { env } from "@/config/env";
 import { isUserAdmin } from "@/features/auth/services/authService";
+import { CreateAuthorDTO, UpdateAuthorDTO } from "@/features/types/author";
+import { getAuthToken } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
 
-const url = `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/book`;
-/**
- * Crear un nuevo libro
- */
-export const createBookAction = async (
-  bookData: CreateBookDTO
+const url = `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/author`;
+
+export const CreateAuthorAction = async (
+  authorData: CreateAuthorDTO
 ): Promise<{ success: boolean; message: string; data?: any }> => {
   try {
     const token = await getAuthToken();
@@ -22,34 +20,42 @@ export const createBookAction = async (
         message: "No autenticado. Por favor inicia sesión.",
       };
     }
+
     const admin = await isUserAdmin();
     if (!admin) {
-      return { success: false, message: "No autorizado: requiere rol admin." };
+      return {
+        success: false,
+        message: "No autorizado: requiere rol admin.",
+      };
     }
-    const response = await fetch(`${url}`, {
+
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(bookData),
+      body: JSON.stringify(authorData),
     });
 
     if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || "Error al crear el libro");
-  }
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `Error ${response.status}: Error al crear autor`
+      );
+    }
 
-   const data = await response.json();
-    revalidatePath("/books");
+    const data = await response.json();
+
+    revalidatePath("/authors");
 
     return {
       success: true,
-      message: "Libro creado exitosamente",
-      data: data,
+      message: "Autor creado exitosamente",
+      data,
     };
   } catch (error) {
-    console.error("Error creating book:", error);
+    console.error("Error creating author:", error);
     return {
       success: false,
       message: error instanceof Error ? error.message : "Error desconocido",
@@ -57,12 +63,9 @@ export const createBookAction = async (
   }
 };
 
-/**
- * Actualizar un libro
- */
-export const updateBookAction = async (
+export const UpdateAuthorAction = async (
   id: string,
-  bookData: UpdateBookDTO
+  authorData: UpdateAuthorDTO
 ): Promise<{ success: boolean; message: string; data?: any }> => {
   try {
     const token = await getAuthToken();
@@ -72,35 +75,43 @@ export const updateBookAction = async (
         message: "No autenticado. Por favor inicia sesión.",
       };
     }
+
     const admin = await isUserAdmin();
     if (!admin) {
-      return { success: false, message: "No autorizado: requiere rol admin." };
+      return {
+        success: false,
+        message: "No autorizado: requiere rol admin.",
+      };
     }
+
     const response = await fetch(`${url}/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(bookData),
+      body: JSON.stringify(authorData),
     });
 
-    
     if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || "Error al actualizar el libro");
-  }
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message ||
+          `Error ${response.status}: Error al actualizar autor`
+      );
+    }
 
-   const data = await response.json();
-    revalidatePath(`/books/${id}`);
+    const data = await response.json();
+
+    revalidatePath("/authors");
 
     return {
       success: true,
-      message: "Libro actualizado exitosamente",
-      data: data,
+      message: "Autor actualizado exitosamente",
+      data,
     };
   } catch (error) {
-    console.error(`Error updating book ${id}:`, error);
+    console.error("Error updating author:", error);
     return {
       success: false,
       message: error instanceof Error ? error.message : "Error desconocido",
@@ -108,10 +119,7 @@ export const updateBookAction = async (
   }
 };
 
-/**
- * Eliminar un libro
- */
-export const deleteBookAction = async (
+export const DeleteAuthorAction = async (
   id: string
 ): Promise<{ success: boolean; message: string }> => {
   try {
@@ -122,10 +130,15 @@ export const deleteBookAction = async (
         message: "No autenticado. Por favor inicia sesión.",
       };
     }
+
     const admin = await isUserAdmin();
     if (!admin) {
-      return { success: false, message: "No autorizado: requiere rol admin." };
+      return {
+        success: false,
+        message: "No autorizado: requiere rol admin.",
+      };
     }
+
     const response = await fetch(`${url}/${id}`, {
       method: "DELETE",
       headers: {
@@ -135,18 +148,20 @@ export const deleteBookAction = async (
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `Error: ${response.status}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `Error ${response.status}: Error al eliminar autor`
+      );
     }
 
-    revalidatePath("/books");
+    revalidatePath("/authors");
 
     return {
       success: true,
-      message: "Libro eliminado exitosamente",
+      message: "Autor eliminado exitosamente",
     };
   } catch (error) {
-    console.error(`Error deleting book ${id}:`, error);
+    console.error("Error deleting author:", error);
     return {
       success: false,
       message: error instanceof Error ? error.message : "Error desconocido",

@@ -11,15 +11,8 @@ interface BookCardProps {
 }
 
 export default function BookCard({ book, isAdmin = false }: BookCardProps) {
-  // Verificar si el libro tiene stock disponible
   const hasStock = book.stockPurchase > 0 || book.stockRental > 0;
   
-  // Si no tiene stock y el usuario no es admin, no mostrar el libro
-  if (!hasStock && !isAdmin) {
-    return null;
-  }
-
-  // Clases de opacidad si no tiene stock
   const opacityClass = !hasStock ? "opacity-50" : "";
   
   return (
@@ -99,7 +92,9 @@ export default function BookCard({ book, isAdmin = false }: BookCardProps) {
         <div className="flex gap-2">
           <Link 
             href={`/books/${book.id}`}
+            
             className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 transition-all duration-300"
+            
           >
             <Eye className="w-4 h-4" />
             <span>Ver Detalles</span>
