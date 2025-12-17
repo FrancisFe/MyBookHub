@@ -14,22 +14,26 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
       const response = await loginUser({ email, password });
-      await setAuthToken(response.token, response.expiresIn);
+      
+      // Guardamos en localStorage (esta función ahora es sincrónica y de cliente)
+      setAuthToken(response.token); 
+      
       router.push('/');
+      // Forzamos un refresh para que el estado de la app se actualice
+      router.refresh(); 
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
       <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 sm:p-8 w-full max-w-md">
@@ -54,7 +58,11 @@ export default function LoginPage() {
         )}
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={(e) => {
+    e.preventDefault(); // <--- ESTO EVITA QUE LA PÁGINA RECARGUE Y DE EL ERROR 500
+    handleSubmit(e);
+  }} 
+  className="space-y-6">
           <div>
             <label className="block text-gray-300 text-sm font-medium mb-2">
               Correo Electrónico

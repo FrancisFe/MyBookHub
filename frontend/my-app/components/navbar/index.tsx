@@ -1,143 +1,186 @@
-import Link from "next/link";
-import { LoginButton } from "@/components/button/LoginButton";
-import { CartButton } from "./CartButton";
-import { isAuthenticated } from "@/lib/auth";
-import { isUserAdmin } from "@/features/auth/services/authService";
+/* eslint-disable react-hooks/set-state-in-effect */
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import { isAuthenticated, getUserRole } from "@/lib/auth";
+import { LoginButton } from "../button/LoginButton";
 import { LogoutButton } from "../button/LogoutButton";
-import { Home, BookOpen, Phone, PackageOpen, Shield } from "lucide-react";
-import AdminDropdown from "@/components/navbar/adminDropdown";
+import { 
+  ShoppingCart, 
+  BookOpen, 
+  ChevronDown,
+  Tags, 
+  Users,
+  Package,
+  Home
+} from "lucide-react";
+import { useCart } from "@/context/cartContex";
+import Link from "next/link";
 
-const navItems = [
-  {
-    label: "Inicio",
-    href: "/",
-    icon: <Home className="w-4 h-4" />,
-  },
-  {
-    label: "Libros",
-    href: "/books",
-    icon: <BookOpen className="w-4 h-4" />,
-  },
-  {
-    label: "Contacto",
-    href: "/contact",
-    icon: <Phone className="w-4 h-4" />,
-  },
-];
+export default function Navbar() {
+  const [mounted, setMounted] = useState(false);
+  const [auth, setAuth] = useState({ logged: false, admin: false });
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const { totalItems } = useCart();
 
-export default async function Navbar() {
-  const authenticated = await isAuthenticated();
-  const userAdmin = await isUserAdmin(); // ✅ Obtener si es admin
+  const checkAuth = () => {
+    setAuth({
+      logged: isAuthenticated(),
+      admin: getUserRole()?.toLowerCase() === "admin"
+    });
+  };
+
+  useEffect(() => {
+    setMounted(true);
+    checkAuth();
+    
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    window.addEventListener("storage", checkAuth);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  if (!mounted) return <nav className="h-16 bg-gray-900 border-b border-gray-800" />;
 
   return (
-    <header className="w-full bg-gradient-to-r from-gray-900 to-black border-b border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo y navegación */}
-          <div className="flex items-center">
-            <Link
-              href="/"
-              className="flex items-center gap-2 mr-8 hover:opacity-90 transition-opacity"
+    <nav className="w-full bg-gray-900 border-b border-gray-700 px-4">
+      <div className="max-w-7xl mx-auto flex items-center justify-between h-16">
+        
+        {/* Logo y navegación izquierda */}
+        <div className="flex items-center gap-8">
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="p-2 bg-gray-800 rounded-lg border border-gray-700 group-hover:border-blue-500 transition-colors">
+              <BookOpen className="w-5 h-5 text-blue-400" />
+            </div>
+            <span className="text-xl font-bold text-white">
+              Books Devlights
+            </span>
+          </Link>
+
+          {/* Navegación principal */}
+          <div className="hidden md:flex items-center gap-4">
+            <Link 
+              href="/" 
+              className="flex items-center gap-2 px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
             >
-              <div className="p-2 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg">
-                <BookOpen className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                Books Devlights
-              </span>
+              <Home className="w-4 h-4" />
+              <span>Inicio</span>
             </Link>
-
-            {/* Navegación principal */}
-            <nav className="hidden md:flex items-center space-x-1">
-              {navItems.map((item) => (
-                <Link
-                  href={item.href}
-                  key={item.href}
-                  className="group flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-all duration-200"
-                >
-                  {item.icon}
-                  <span className="font-medium">{item.label}</span>
-                  <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-4/5 transition-all duration-300"></span>
-                </Link>
-              ))}
-              
-              {/* Dropdown Admin - Solo visible para admin */}
-              {userAdmin && <AdminDropdown />}
-            </nav>
+            
+            <Link 
+              href="/books" 
+              className="flex items-center gap-2 px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>Libros</span>
+            </Link>
           </div>
+        </div>
 
-          {/* Acciones del usuario */}
-          <div className="flex items-center space-x-4">
-            {/* Carrito */}
-            {authenticated && <CartButton />}
-
-            {/* Mis Órdenes */}
-            {authenticated && (
-              <Link
-                href="/orders/my-orders"
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+        {/* Centro: Admin Dropdown */}
+        <div className="flex items-center gap-4">
+          {auth.admin && (
+            <div className="relative" ref={dropdownRef}>
+              <button 
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                  isDropdownOpen 
+                    ? 'bg-gray-800 text-white border border-gray-600' 
+                    : 'text-gray-300 hover:text-white hover:bg-gray-800'
+                }`}
               >
-                <PackageOpen className="w-4 h-4" />
-                <span className="font-medium hidden sm:inline">Mis Órdenes</span>
-              </Link>
-            )}
+                <div className="w-6 h-6 bg-blue-900/30 rounded flex items-center justify-center">
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                </div>
+                <span>Administración</span>
+              </button>
 
-            {/* Separador */}
-            {authenticated && <div className="h-6 w-px bg-gray-700"></div>}
-
-            {/* Autenticación */}
-            <div className="flex items-center space-x-2">
-              {authenticated ? (
-                <>
-                  {/* Badge de Admin en mobile */}
-                  {userAdmin && (
-                    <div className="md:hidden px-3 py-1 bg-gradient-to-r from-yellow-900/20 to-yellow-800/10 rounded-full border border-yellow-800/30">
-                      <span className="text-yellow-400 text-sm font-medium">Admin</span>
-                    </div>
-                  )}
-                  <LogoutButton />
-                </>
-              ) : (
-                <>
-                  <LoginButton variant="login" />
-                  <div className="hidden sm:block">
-                    <LoginButton variant="register" />
+              {isDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-56 bg-gray-800 border border-gray-700 rounded-xl shadow-xl py-3 z-50">
+                  <div className="px-4 py-2 border-b border-gray-700">
+                    <p className="text-sm font-medium text-white">Panel Admin</p>
+                    <p className="text-xs text-gray-400">Recursos exclusivos</p>
                   </div>
-                </>
+                  
+                  <div className="py-2">
+                    <Link 
+                      href="/authors" 
+                      onClick={() => setIsDropdownOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors"
+                    >
+                      <div className="p-2 bg-gray-700/50 rounded">
+                        <Users className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Autores</p>
+                        <p className="text-xs text-gray-400">Gestionar autores</p>
+                      </div>
+                    </Link>
+                    
+                    <Link 
+                      href="/categories" 
+                      onClick={() => setIsDropdownOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors"
+                    >
+                      <div className="p-2 bg-gray-700/50 rounded">
+                        <Tags className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Categorías</p>
+                        <p className="text-xs text-gray-400">Gestionar categorías</p>
+                      </div>
+                    </Link>
+                  </div>
+                </div>
               )}
             </div>
-          </div>
+          )}
         </div>
 
-        {/* Navegación móvil */}
-        <div className="md:hidden pb-4">
-          <div className="flex items-center justify-around">
-            {navItems.map((item) => (
-              <Link
-                href={item.href}
-                key={item.href}
-                className="flex flex-col items-center gap-1 px-3 py-2 text-gray-400 hover:text-white transition-colors"
+        {/* Derecha: Carrito, Órdenes y Auth */}
+        <div className="flex items-center gap-3">
+          {auth.logged && (
+            <>
+              <Link 
+                href="/orders/my-orders" 
+                className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
               >
-                <div className="p-2 bg-gray-800 rounded-lg">{item.icon}</div>
-                <span className="text-xs font-medium">{item.label}</span>
+                <Package className="w-4 h-4" />
+                <span className="hidden sm:inline">Mis Órdenes</span>
               </Link>
-            ))}
-            
-            {/* Admin en mobile */}
-            {userAdmin && (
-              <Link
-                href="/authors"
-                className="flex flex-col items-center gap-1 px-3 py-2 text-yellow-400 hover:text-yellow-300 transition-colors"
-              >
-                <div className="p-2 bg-yellow-900/20 rounded-lg border border-yellow-800/30">
-                  <Shield className="w-4 h-4" />
-                </div>
-                <span className="text-xs font-medium">Admin</span>
+
+              <Link href="/cart" className="relative p-2 text-gray-300 hover:text-white transition-colors">
+                <ShoppingCart className="w-6 h-6" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[18px] flex items-center justify-center">
+                    {totalItems}
+                  </span>
+                )}
               </Link>
-            )}
-          </div>
+
+              <div className="h-6 w-px bg-gray-700 mx-1"></div>
+            </>
+          )}
+
+          {auth.logged ? (
+            <LogoutButton />
+          ) : (
+            <div className="flex items-center gap-2">
+              <LoginButton variant="login" />
+              <LoginButton variant="register" />
+            </div>
+          )}
         </div>
       </div>
-    </header>
+    </nav>
   );
 }

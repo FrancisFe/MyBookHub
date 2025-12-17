@@ -39,7 +39,7 @@ export default async function CategoriesPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {categories.map((category) => (
             <Link
-              href={`/categories/${category.id}`}
+              href={`/categories/`}
               key={category.id}
               className="group bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 overflow-hidden hover:border-gray-600 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
             >

@@ -1,7 +1,7 @@
-// app/context/CartContext.tsx
+
 "use client";
 
-import { createContext, useContext, ReactNode, useMemo } from "react";
+import { createContext, useContext, ReactNode, useMemo, useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BookDTO } from "@/features/types/book";
 import { Cart } from "@/features/types/cart";
@@ -27,14 +27,37 @@ type CartContextType = {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export function CartProvider({ children, userId }: { children: ReactNode; userId: string | null }) {
+export function CartProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
+  const [userId, setUserId] = useState<string | null>(null);
 
+  // 1. EFECTO: Sincronización con LocalStorage y eventos de Auth
+  useEffect(() => {
+    const handleAuthChange = () => {
+      const storedUser = localStorage.getItem("userId");
+      setUserId(storedUser);
+      // Si el usuario se desloguea, limpiamos la caché del carrito inmediatamente
+      if (!storedUser) {
+        queryClient.setQueryData(["cart", null], null);
+        queryClient.invalidateQueries({ queryKey: ["cart"] });
+      }
+    };
+
+    // Verificación inicial
+    handleAuthChange();
+
+    // Escuchar el evento 'storage' para reaccionar al Login/Logout en tiempo real
+    window.addEventListener("storage", handleAuthChange);
+    return () => window.removeEventListener("storage", handleAuthChange);
+  }, [queryClient]);
+
+  // 2. QUERY: Solo se habilita si hay userId y estamos en el cliente
   const { data, isLoading } = useQuery<Cart>({
     queryKey: ["cart", userId],
     queryFn: getCart,
-    staleTime: 0,
-    enabled: !!userId,
+    staleTime: 1000 * 60 * 5, // 5 minutos de caché para evitar spam de peticiones
+    enabled: !!userId && typeof window !== "undefined",
+    retry: false, // No reintentar si da 401
   });
 
   const cart = data ?? null;
@@ -64,52 +87,50 @@ export function CartProvider({ children, userId }: { children: ReactNode; userId
     book: BookDTO,
     type: "Purchase" | "Rental" = "Purchase"
   ) => {
-    const availableStock =
-      type === "Purchase" ? book.stockPurchase : book.stockRental;
-    const existingItem = items.find(
-      (item) => item.bookId === book.id && item.type === type
-    );
-    const currentQuantity = existingItem?.quantity ?? 0;
-
-    if (currentQuantity >= availableStock) {
-      alert(
-        `No hay más stock disponible para ${
-          type === "Purchase" ? "compra" : "renta"
-        }. Stock actual: ${availableStock}`
-      );
+    if (!userId) {
+      alert("Debes iniciar sesión para agregar productos");
       return;
     }
 
-    // Para rentals, establecer automáticamente las fechas: hoy y hoy + 1 día
+    const availableStock = type === "Purchase" ? book.stockPurchase : book.stockRental;
+    const existingItem = items.find((item) => item.bookId === book.id && item.type === type);
+    const currentQuantity = existingItem?.quantity ?? 0;
+
+    if (currentQuantity >= availableStock) {
+      alert(`No hay más stock disponible. Máximo: ${availableStock}`);
+      return;
+    }
+
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const result = await addItemToCartAction({
-      bookId: book.id,
-      quantity: 1,
-      type,
-      ...(type === "Rental" && {
-        rentalStartDate: today.toISOString().split('T')[0],
-        rentalEndDate: tomorrow.toISOString().split('T')[0],
-      }),
-    });
-
-    if (!result.success) {
-      alert(result.message || "Error al agregar al carrito");
-      return;
+    try {
+        const result = await addItemToCartAction({
+          bookId: book.id,
+          quantity: 1,
+          type,
+          ...(type === "Rental" && {
+            rentalStartDate: today.toISOString().split('T')[0],
+            rentalEndDate: tomorrow.toISOString().split('T')[0],
+          }),
+        });
+    
+        if (!result.success) {
+          alert(result.message || "Error al agregar al carrito");
+          return;
+        }
+    
+        await invalidate();
+    } catch (error) {
+        console.error("Error en addToCart:", error);
     }
-
-    await invalidate();
   };
 
   const removeFromCart = async (itemId: string) => {
     const result = await removeItemFromCartAction(itemId);
-    if (!result.success) {
-      alert(result.message || "Error al eliminar del carrito");
-      return;
-    }
-    await invalidate();
+    if (result.success) await invalidate();
+    else alert(result.message);
   };
 
   const updateQuantity = async (itemId: string, quantity: number) => {
@@ -117,26 +138,13 @@ export function CartProvider({ children, userId }: { children: ReactNode; userId
       await removeFromCart(itemId);
       return;
     }
-
-    const item = items.find((i) => i.id === itemId);
-    if (item) {
-      const result = await updateCartItemAction(itemId, quantity);
-      if (!result.success) {
-        alert(result.message || "Error al actualizar cantidad");
-        return;
-      }
-    }
-
-    await invalidate();
+    const result = await updateCartItemAction(itemId, quantity);
+    if (result.success) await invalidate();
   };
 
   const clearCart = async () => {
     const result = await clearCartAction();
-    if (!result.success) {
-      alert(result.message || "Error al vaciar el carrito");
-      return;
-    }
-    await invalidate();
+    if (result.success) await invalidate();
   };
 
   return (

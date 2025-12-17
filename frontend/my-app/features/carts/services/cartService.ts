@@ -1,53 +1,33 @@
-"use server";
-import { Cart } from "@/features/types/cart";
+// features/carts/services/cartService.ts
+import { getAuthToken } from "@/lib/auth";
 import { getApiUrl } from "@/features/utils/baseURL";
 
-import { getAuthToken } from "@/lib/auth";
-
-const url = getApiUrl('/api/cart');
-
-/**
- * Obtener el carrito del usuario actual
- */
-export const getCart = async (): Promise<Cart> => {
-  const token = await getAuthToken();
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    next: { revalidate: 0 }, // No cachear carrito
-  });
+export const getCart = async () => {
+  // 1. Verificamos si estamos en el cliente y si hay token
+  if (typeof window === "undefined") return null;
   
-  if (!response.ok) throw new Error(`Error: ${response.status}`);
-  return await response.json();
-};
+  const token = getAuthToken(); 
+  if (!token) return null; // No disparamos la petición si no hay login
 
-/**
- * Obtener cantidad de items en el carrito
- */
-export const getCartItemCount = async (): Promise<number> => {
-  const token = await getAuthToken();
-  const response = await fetch(`${url}/item-count`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  
-  if (!response.ok) throw new Error(`Error: ${response.status}`);
-  return await response.json();
-};
+  try {
+    const response = await fetch(getApiUrl('/api/cart'), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+    });
 
-/**
- * Obtener total del carrito
- */
-export const getCartTotal = async (): Promise<number> => {
-  const token = await getAuthToken();
-  const response = await fetch(`${url}/total`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  
-  if (!response.ok) throw new Error(`Error: ${response.status}`);
-  return await response.json();
+    if (response.status === 401) {
+      console.warn("Sesión expirada o no autorizada");
+      return null;
+    }
+
+    if (!response.ok) throw new Error("Error al obtener el carrito");
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error en getCart:", error);
+    return null;
+  }
 };

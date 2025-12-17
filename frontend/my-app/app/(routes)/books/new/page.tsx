@@ -3,7 +3,6 @@ import { createBookAction } from "@/features/books/services/bookActions";
 import { CreateBookDTO } from "@/features/types/book";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { PlusCircle, ArrowLeft, Loader2 } from "lucide-react";
 
 const initialForm: CreateBookDTO = {
   title: "",
@@ -50,50 +49,38 @@ export default function NewBookPage() {
   };
 
   return (
-    <div className="min-h-screen p-4 sm:p-6">
+    <div className="min-h-screen bg-gray-900 p-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <button
             onClick={() => router.back()}
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors"
+            className="text-blue-400 hover:text-blue-300 mb-6 inline-flex items-center gap-2"
           >
-            <ArrowLeft className="w-5 h-5" />
-            Volver
+            <span>←</span>
+            <span>Volver</span>
           </button>
           
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-gradient-to-br from-blue-900/20 to-purple-900/20 rounded-lg">
-              <PlusCircle className="w-8 h-8 text-blue-400" />
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white">
-              Nuevo Libro
-            </h1>
-          </div>
+          <h1 className="text-3xl font-bold text-white mb-2">
+            Nuevo Libro
+          </h1>
           <p className="text-gray-400">
-            Completa los detalles para agregar un nuevo libro al catálogo
+            Completa los detalles para agregar un nuevo libro
           </p>
         </div>
 
         {/* Formulario */}
-        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 p-6">
+        <div className="bg-gray-800 rounded-xl border border-gray-700 p-6">
           {error && (
-            <div className="mb-6 p-4 bg-gradient-to-r from-red-900/20 to-red-800/10 border border-red-800/30 rounded-xl">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-red-900/30 rounded-full flex items-center justify-center">
-                  <span className="text-red-400">!</span>
-                </div>
-                <p className="text-red-300">{error}</p>
-              </div>
+            <div className="mb-6 p-4 bg-red-900/20 border border-red-700 rounded-lg">
+              <p className="text-red-300">{error}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Información básica */}
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
-                Información básica
-              </h2>
+              <h2 className="text-lg font-semibold text-white">Información básica</h2>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -107,7 +94,7 @@ export default function NewBookPage() {
                       setFormData({ ...formData, title: e.target.value })
                     }
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
                     placeholder="Título del libro"
                   />
                 </div>
@@ -123,7 +110,7 @@ export default function NewBookPage() {
                       setFormData({ ...formData, isbn: e.target.value })
                     }
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
                     placeholder="ISBN del libro"
                   />
                 </div>
@@ -139,69 +126,53 @@ export default function NewBookPage() {
                     setFormData({ ...formData, description: e.target.value })
                   }
                   rows={3}
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors resize-none"
-                  placeholder="Breve descripción del libro"
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500 resize-none"
+                  placeholder="Descripción del libro"
                 />
               </div>
             </div>
 
             {/* Precios y Stock */}
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
-                Precios y disponibilidad
-              </h2>
+              <h2 className="text-lg font-semibold text-white">Precios y Stock</h2>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-gray-300 text-sm font-medium mb-2">
                     Precio de compra *
                   </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                      $
-                    </span>
-                    <input
-                      type="number"
-                      value={formData.purchasePrice}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          purchasePrice: Number(e.target.value),
-                        })
-                      }
-                      required
-                      min="0"
-                      step="0.01"
-                      className="w-full pl-8 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                      placeholder="0.00"
-                    />
-                  </div>
+                  <input
+                    type="number"
+                    value={formData.purchasePrice}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        purchasePrice: Number(e.target.value),
+                      })
+                    }
+                    required
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                    placeholder="Precio de compra"
+                  />
                 </div>
 
                 <div>
                   <label className="block text-gray-300 text-sm font-medium mb-2">
                     Precio de renta/día *
                   </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                      $
-                    </span>
-                    <input
-                      type="number"
-                      value={formData.rentalPricePerDay}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          rentalPricePerDay: Number(e.target.value),
-                        })
-                      }
-                      required
-                      min="0"
-                      step="0.01"
-                      className="w-full pl-8 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                      placeholder="0.00"
-                    />
-                  </div>
+                  <input
+                    type="number"
+                    value={formData.rentalPricePerDay}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        rentalPricePerDay: Number(e.target.value),
+                      })
+                    }
+                    required
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                    placeholder="Precio de renta por día"
+                  />
                 </div>
 
                 <div>
@@ -218,9 +189,8 @@ export default function NewBookPage() {
                       })
                     }
                     required
-                    min="0"
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                    placeholder="0"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                    placeholder="Stock para compra"
                   />
                 </div>
 
@@ -238,9 +208,8 @@ export default function NewBookPage() {
                       })
                     }
                     required
-                    min="0"
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                    placeholder="0"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                    placeholder="Stock para renta"
                   />
                 </div>
               </div>
@@ -248,9 +217,7 @@ export default function NewBookPage() {
 
             {/* Multimedia y relaciones */}
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
-                Multimedia y relaciones
-              </h2>
+              <h2 className="text-lg font-semibold text-white">Multimedia y relaciones</h2>
               
               <div>
                 <label className="block text-gray-300 text-sm font-medium mb-2">
@@ -263,8 +230,8 @@ export default function NewBookPage() {
                     setFormData({ ...formData, imageUrl: e.target.value })
                   }
                   required
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-                  placeholder="https://ejemplo.com/imagen.jpg"
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                  placeholder="URL de la imagen"
                 />
               </div>
 
@@ -280,7 +247,7 @@ export default function NewBookPage() {
                       setFormData({ ...formData, publishedDate: e.target.value })
                     }
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
@@ -295,7 +262,7 @@ export default function NewBookPage() {
                       setFormData({ ...formData, authorId: e.target.value })
                     }
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
                     placeholder="ID del autor"
                   />
                 </div>
@@ -311,7 +278,7 @@ export default function NewBookPage() {
                       setFormData({ ...formData, categoryId: e.target.value })
                     }
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
                     placeholder="ID de la categoría"
                   />
                 </div>
@@ -319,37 +286,16 @@ export default function NewBookPage() {
             </div>
 
             {/* Botón de envío */}
-            <div className="pt-4 border-t border-gray-700">
+            <div className="pt-4">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Creando libro...
-                  </>
-                ) : (
-                  <>
-                    <PlusCircle className="w-5 h-5" />
-                    Crear Libro
-                  </>
-                )}
+                {loading ? "Creando libro..." : "Crear Libro"}
               </button>
-              
-              <p className="text-gray-500 text-sm text-center mt-4">
-                Todos los campos marcados con * son obligatorios
-              </p>
             </div>
           </form>
-        </div>
-
-        {/* Nota */}
-        <div className="mt-6 p-4 bg-gray-800/30 rounded-xl border border-gray-700">
-          <p className="text-gray-400 text-sm text-center">
-            El libro será agregado al catálogo inmediatamente después de la creación
-          </p>
         </div>
       </div>
     </div>

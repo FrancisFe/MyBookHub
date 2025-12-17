@@ -13,7 +13,6 @@ export const getCategories = async (): Promise<CategoryDTO[]> => {
             headers:{
                 "Content-Type":"application/json",
             },
-            next: {revalidate: 0, tags: ['categories']},
         });
         if(!response.ok){
             throw new Error(`Error: ${response.status}`);
@@ -32,7 +31,6 @@ export const getCategoryById = async (id:string):Promise<CategoryDTO> =>{
             headers:{
                 "Content-Type":"application/json",
             },
-            next: {revalidate: 0, tags: ['categories', `category-${id}`]},
         });
         if(!response.ok){
             throw new Error(`Error: ${response.status}`);

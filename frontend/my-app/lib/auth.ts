@@ -1,48 +1,45 @@
-"use server";
 import { jwtDecode } from "jwt-decode";
-import { cookies } from "next/headers";
 
 const TOKEN_NAME = "authToken";
-const TOKEN_EXPIRY = "authTokenExpiry";
+const USER_ID = "userId";
+const USER_ROLE = "userRole";
+const USER_NAME = "userName";
 
 interface JWTPayload {
   sub: string;
-  name: string;
-  email: string;
-  role?: string;
-  "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"?: string;
-  iat: number;
   exp: number;
+  // Claims de Microsoft (estos son los que devuelve tu backend)
+  "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"?: string;
+  "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"?: string;
+  "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"?: string;
+  "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"?: string;
 }
 
-export async function setAuthToken(token: string, expiresIn: string) {
-  const cookieStore = await cookies();
-  const expiryDate = new Date(expiresIn);
+const isClient = () => typeof window !== "undefined";
 
-  cookieStore.set(TOKEN_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    expires: expiryDate,
-  });
+export function setAuthToken(token: string) {
+  if (!isClient()) return;
+  
+  localStorage.setItem(TOKEN_NAME, token);
+  
+  const decoded = decodeToken(token);
+  if (decoded) {
+    // Mapeamos los nombres largos a nombres cortos para el frontend
+    const id = decoded.sub || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+    const name = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+    const role = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
-  cookieStore.set(TOKEN_EXPIRY, expiryDate.toISOString(), {
-    expires: expiryDate,
-  });
+    if (id) localStorage.setItem(USER_ID, id);
+    if (name) localStorage.setItem(USER_NAME, name);
+    if (role) localStorage.setItem(USER_ROLE, role);
+    
+    console.log("Datos guardados en LocalStorage:", { id, name, role });
+  }
+  
+  window.dispatchEvent(new Event("storage"));
 }
 
-export async function getAuthToken(): Promise<string | null> {
-  const cookieStore = await cookies();
-  return cookieStore.get(TOKEN_NAME)?.value || null;
-}
-
-export async function clearAuthToken() {
-  const cookieStore = await cookies();
-  cookieStore.delete(TOKEN_NAME);
-  cookieStore.delete(TOKEN_EXPIRY);
-}
-
-export async function decodeToken(token: string): Promise<JWTPayload | null> {
+export function decodeToken(token: string): JWTPayload | null {
   try {
     return jwtDecode<JWTPayload>(token);
   } catch {
@@ -50,58 +47,30 @@ export async function decodeToken(token: string): Promise<JWTPayload | null> {
   }
 }
 
-export async function isAuthenticated(): Promise<boolean> {
-  const token = await getAuthToken();
+export function getAuthToken(): string | null {
+  return isClient() ? localStorage.getItem(TOKEN_NAME) : null;
+}
+
+export function getUserRole(): string | null {
+  return isClient() ? localStorage.getItem(USER_ROLE) : null;
+}
+
+export function isAdmin(): boolean {
+  const role = getUserRole();
+  // Tu token devuelve "Admin", así que comparamos ignorando mayúsculas
+  return role?.toLowerCase() === "admin";
+}
+
+export function isAuthenticated(): boolean {
+  const token = getAuthToken();
   if (!token) return false;
-
-  const decoded = await decodeToken(token);
+  const decoded = decodeToken(token);
   if (!decoded) return false;
-
-  // Verificar si el token no ha expirado
-  const now = Math.floor(Date.now() / 1000);
-  return decoded.exp > now;
+  return decoded.exp > Math.floor(Date.now() / 1000);
 }
 
-export async function getCurrentUser(): Promise<{
-  id: string;
-  email: string;
-  name: string;
-} | null> {
-  const token = await getAuthToken();
-  if (!token) return null;
-
-  const decoded = await decodeToken(token);
-  if (!decoded) return null;
-
-  return {
-    id: decoded.sub,
-    email: decoded.email,
-    name: decoded.name,
-  };
-}
-
-export async function getCurrentUserId(): Promise<string | null> {
-  const token = await getAuthToken();
-  if (!token) return null;
-
-  const decoded = await decodeToken(token);
-  if (!decoded) return null;
-
-  return decoded.sub;
-}
-
-export async function getUserRole(): Promise<string | null> {
-  const token = await getAuthToken();
-  if (!token) return null;
-
-  const decoded = await decodeToken(token);
-  if (!decoded) return null;
-
-  // El role puede venir en diferentes formatos dependiendo del claim
-  return decoded.role || decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] || null;
-}
-
-export async function isAdmin(): Promise<boolean> {
-  const role = await getUserRole();
-  return role === "Admin" || role === "1";
+export function clearAuthToken() {
+  if (!isClient()) return;
+  localStorage.clear(); // Limpia todo para asegurar un logout limpio
+  window.dispatchEvent(new Event("storage"));
 }

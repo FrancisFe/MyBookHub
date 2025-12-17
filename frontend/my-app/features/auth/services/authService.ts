@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 
 import { getApiUrl } from "@/features/utils/baseURL";
 import { getAuthToken } from "@/lib/auth";
@@ -55,32 +55,23 @@ export const registerUser = async (data: RegisterRequest): Promise<void> => {
 };
 
 export const isUserAdmin = async (): Promise<boolean> => {
+  if (typeof window === "undefined") return false; // Evita ejecución en build
+
   try {
-    const token = await getAuthToken();
+    const token = getAuthToken(); // Usa la función de lib/auth (cliente)
+    if (!token) return false;
 
-    if (!token) {
-      return false;
-    }
-
-    const response = await fetch(
-      getApiUrl('/api/auth/is-admin'),
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        next: { revalidate: 60 },
+    const response = await fetch(getApiUrl('/api/auth/is-admin'), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       }
-    );
+    });
 
-    if (!response.ok) {
-      return false;
-    }
-
-    const isAdmin = await response.json();
-    return isAdmin;
-  } catch (er) {
+    if (!response.ok) return false;
+    return await response.json();
+  } catch {
     return false;
   }
 };

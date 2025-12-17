@@ -11,7 +11,6 @@ export const getAuthors = async (): Promise<AuthorDTO[]> => {
       headers: {
         "Content-Type": "application/json",
       },
-      next: { revalidate: 0, tags: ["authors"] },
     });
 
     if (!response.ok) {
@@ -32,7 +31,6 @@ export const getAuthorById = async (id: string): Promise<Author> => {
       headers: {
         "Content-Type": "application/json",
       },
-      next: { revalidate: 0, tags: ["authors", `author-${id}`] },
     });
 
     if (!response.ok) {

@@ -1,14 +1,35 @@
+"use client"; // <--- 1. Obligatorio para leer el token del navegador
+
+import { useEffect, useState } from "react";
 import { getMyOrders } from "@/features/orders/services/orderService";
-import { Package, Calendar, DollarSign, Tag, ShoppingBag } from "lucide-react";
+import { OrderDto } from "@/features/types/order"; // Asegúrate de que esta ruta sea correcta
+import { Package, Calendar, DollarSign, Tag, ShoppingBag, Loader2 } from "lucide-react";
 import Link from "next/link";
 
-export default async function MyOrdersPage() {
-  const orders = await getMyOrders();
+export default function MyOrdersPage() {
+  const [orders, setOrders] = useState<OrderDto[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const data = await getMyOrders();
+        setOrders(data || []);
+      } catch (err) {
+        console.error("Error al obtener órdenes:", err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchOrders();
+  }, []);
+
+  // Helper para el tipo de item
   const getItemType = (type: unknown): { label: string; colorClass: string } => {
     const t = String(type).toLowerCase();
-
     const isPurchase = t === "purchase" || t === "compra" || t === "0";
     const isRental = t === "rental" || t === "renta" || t === "1";
     if (isPurchase) return { label: "Compra", colorClass: "text-green-400" };
@@ -16,6 +37,7 @@ export default async function MyOrdersPage() {
     return { label: t || "Desconocido", colorClass: "text-gray-400" };
   };
 
+  // Helper para el estado
   const getStatusInfo = (status: string | number) => {
     const s = Number(status);
     const statusMap: Record<number, { label: string; colorClass: string }> = {
@@ -27,7 +49,16 @@ export default async function MyOrdersPage() {
     return statusMap[s] || { label: "Desconocido", colorClass: "bg-gray-500/20 text-gray-400 border-gray-500/30" };
   };
 
-  if (orders.length === 0) {
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900">
+        <Loader2 className="w-12 h-12 text-blue-500 animate-spin mb-4" />
+        <p className="text-gray-400 animate-pulse">Cargando tu historial...</p>
+      </div>
+    );
+  }
+
+  if (error || orders.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
         <div className="text-center">
@@ -35,10 +66,10 @@ export default async function MyOrdersPage() {
             <ShoppingBag className="w-10 h-10 text-gray-500" />
           </div>
           <h1 className="text-2xl font-bold text-white mb-2">
-            No tienes órdenes aún
+            {error ? "Hubo un error" : "No tienes órdenes aún"}
           </h1>
           <p className="text-gray-400 mb-6">
-            Tus compras y alquileres aparecerán aquí
+            {error ? "No pudimos conectar con el servidor" : "Tus compras y alquileres aparecerán aquí"}
           </p>
           <Link
             href="/books"
@@ -69,9 +100,9 @@ export default async function MyOrdersPage() {
 
         {/* Lista de órdenes */}
         <div className="space-y-4">
-          {orders.map((order) => (
+          {orders.map((order, idx) => (
             <div
-              key={order.userId + order.orderDate}
+              key={order.id || idx}
               className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden hover:border-gray-600 transition-all duration-300"
             >
               <div className="p-6">
@@ -82,9 +113,7 @@ export default async function MyOrdersPage() {
                       <Package className="w-5 h-5 text-blue-400" />
                     </div>
                     <div>
-                      <p className="text-white font-semibold">
-                        Orden # {order.id}
-                      </p>
+                      <p className="text-white font-semibold">Orden # {order.id}</p>
                       <div className="flex items-center gap-2 text-gray-400 text-sm">
                         <Calendar className="w-4 h-4" />
                         {new Date(order.orderDate).toLocaleDateString("es-ES", {
@@ -97,63 +126,38 @@ export default async function MyOrdersPage() {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    {/* Estado */}
-                    <span
-                      className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium border ${getStatusInfo(
-                        order.status
-                      ).colorClass}`}
-                    >
+                    <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium border ${getStatusInfo(order.status).colorClass}`}>
                       <Tag className="w-4 h-4" />
                       {getStatusInfo(order.status).label}
                     </span>
 
-                    {/* Total */}
                     <div className="flex items-center gap-2 bg-green-900/20 px-4 py-2 rounded-lg border border-green-800/30">
                       <DollarSign className="w-5 h-5 text-green-400" />
                       <span className="text-white font-bold">
-                        ${order.totalAmount.toFixed(2)}
+                        ${(order.totalAmount || 0).toFixed(2)}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                {/* Items de la orden */}
+                {/* Items */}
                 {order.items && order.items.length > 0 && (
                   <div className="space-y-3">
-                    <p className="text-gray-400 text-sm font-medium">
-                      Items ({order.items.length})
-                    </p>
+                    <p className="text-gray-400 text-sm font-medium">Items ({order.items.length})</p>
                     <div className="grid gap-3">
                       {order.items.map((item, index) => (
-                        <div
-                          key={item.id || index}
-                          className="flex items-center justify-between bg-gray-900/50 rounded-lg p-4 border border-gray-700/50"
-                        >
+                        <div key={item.id || index} className="flex items-center justify-between bg-gray-900/50 rounded-lg p-4 border border-gray-700/50">
                           <div className="flex-1">
-                            <p className="text-white font-medium mb-1">
-                              {item.bookTitle}
-                            </p>
+                            <p className="text-white font-medium mb-1">{item.bookTitle}</p>
                             <div className="flex items-center gap-4 text-sm text-gray-400">
                               <span>Cantidad: {item.quantity}</span>
                               <span>•</span>
-                              {(() => {
-                                const typeInfo = getItemType(item.type as unknown);
-                                return (
-                                  <span className={typeInfo.colorClass}>
-                                    {typeInfo.label}
-                                  </span>
-                                );
-                              })()}
+                              <span className={getItemType(item.type).colorClass}>{getItemType(item.type).label}</span>
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="text-white font-semibold">
-                              ${item.price.toFixed(2)}
-                            </p>
-                            <p className="text-gray-500 text-xs mt-1">
-                              Subtotal: $
-                              {(item.price * item.quantity).toFixed(2)}
-                            </p>
+                            <p className="text-white font-semibold">${(item.price || 0).toFixed(2)}</p>
+                            <p className="text-gray-500 text-xs mt-1">Subtotal: ${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</p>
                           </div>
                         </div>
                       ))}

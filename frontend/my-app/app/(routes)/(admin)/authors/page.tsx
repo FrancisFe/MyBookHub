@@ -40,7 +40,7 @@ export default async function AuthorsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {authors.map((author) => (
             <Link
-              href={`/authors/${author.id}`}
+              href={`/authors/`}
               key={author.id}
               className="group bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 overflow-hidden hover:border-gray-600 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
             >

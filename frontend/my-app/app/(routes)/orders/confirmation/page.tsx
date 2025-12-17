@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react"; // 1. Importar Suspense
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle, Package, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 
-export default function OrderConfirmationPage() {
+// 2. Creamos un componente interno con la lógica que usa searchParams
+function ConfirmationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
@@ -31,7 +32,7 @@ export default function OrderConfirmationPage() {
   }, [orderId, router]);
 
   useEffect(() => {
-    if(countdown === 0){
+    if (countdown === 0) {
       router.push("/orders/my-orders");
     }
   }, [countdown, router]);
@@ -48,7 +49,6 @@ export default function OrderConfirmationPage() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-gray-900">
       <div className="max-w-md w-full">
         <div className="bg-gray-800 rounded-2xl border border-gray-700 p-8 text-center">
-          {/* Icono de éxito */}
           <div className="flex justify-center mb-6">
             <div className="relative">
               <div className="absolute inset-0 bg-green-500/20 rounded-full animate-ping" />
@@ -58,23 +58,19 @@ export default function OrderConfirmationPage() {
             </div>
           </div>
 
-          {/* Título */}
           <h1 className="text-3xl font-bold text-white mb-2">
             ¡Orden creada exitosamente!
           </h1>
           
-          {/* ID de orden */}
           <div className="inline-flex items-center gap-2 bg-gray-900/50 px-4 py-2 rounded-lg mb-6">
             <Package className="w-5 h-5 text-blue-400" />
             <span className="text-gray-400 text-sm">Orden {orderId}</span>
           </div>
 
-          {/* Mensaje */}
           <p className="text-gray-400 mb-8">
             Tu orden ha sido procesada correctamente. Puedes ver los detalles en la sección de Mis Órdenes.
           </p>
 
-          {/* Botones */}
           <div className="space-y-3">
             <Link
               href="/orders/my-orders"
@@ -92,12 +88,24 @@ export default function OrderConfirmationPage() {
             </Link>
           </div>
 
-          {/* Contador de redirección */}
           <p className="text-gray-500 text-sm mt-6">
             Serás redirigido automáticamente en {countdown}s
           </p>
         </div>
       </div>
     </div>
+  );
+}
+
+// 3. El export default envuelve el contenido en Suspense
+export default function OrderConfirmationPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
+      </div>
+    }>
+      <ConfirmationContent />
+    </Suspense>
   );
 }
