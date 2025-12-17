@@ -8,7 +8,7 @@ namespace BibliotecaDevlights.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<OrderItem> builder)
         {
-            builder.ToTable("OrderItems");
+            builder.ToTable("orderitems");
 
             builder.HasKey(oi => oi.Id);
 
@@ -17,7 +17,7 @@ namespace BibliotecaDevlights.Data.Configurations
 
             builder.Property(oi => oi.Price)
                    .IsRequired()
-                   .HasColumnType("decimal(18,2)");
+                   .HasPrecision(18, 2);
 
             builder.HasOne(oi => oi.Order)
                    .WithMany(o => o.OrderItems)

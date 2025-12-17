@@ -8,6 +8,7 @@ namespace BibliotecaDevlights.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<CartItem> builder)
         {
+            builder.ToTable("cartitems");
             builder.HasKey(ci => ci.Id);
 
             builder.Property(ci => ci.Id)
@@ -42,7 +43,7 @@ namespace BibliotecaDevlights.Data.Configurations
             builder.HasIndex(ci => new { ci.CartId, ci.BookId , ci.Type })
                 .IsUnique();
 
-            builder.ToTable("CartItems");
+
         }
     }
 }

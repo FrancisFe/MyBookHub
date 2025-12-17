@@ -9,7 +9,7 @@ namespace BibliotecaDevlights.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("Users");
+            builder.ToTable("users");
 
             builder.HasKey(u => u.Id);
 
@@ -37,10 +37,10 @@ namespace BibliotecaDevlights.Data.Configurations
                 .HasDefaultValue(UserRole.User);
 
             builder.Property(u => u.CreatedAt)
-                .HasDefaultValueSql("GETUTCDATE()");
+                .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
             builder.Property(u => u.UpdatedAt)
-                .HasDefaultValueSql("GETUTCDATE()");
+                .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
             builder.HasIndex(u => u.Email)
                 .IsUnique();

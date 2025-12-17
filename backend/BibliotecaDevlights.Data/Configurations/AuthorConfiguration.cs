@@ -8,7 +8,7 @@ namespace BibliotecaDevlights.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Author> builder)
         {
-            builder.ToTable("Authors");
+            builder.ToTable("authors");
             builder.HasKey(a => a.Id);
             builder.Property(a => a.FirstName)
                    .IsRequired()

@@ -2,13 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace LibrarySystem.DAL.Configurations
+namespace BibliotecaDevlights.Data.Configurations
 {
     public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
     {
         public void Configure(EntityTypeBuilder<Payment> builder)
         {
-            builder.ToTable("Payments");
+            builder.ToTable("payments");
 
             builder.HasKey(p => p.Id);
 
@@ -42,7 +42,7 @@ namespace LibrarySystem.DAL.Configurations
 
             // Relación
             builder.HasOne(p => p.Order)
-                .WithMany() // Order no necesita navigation a Payments
+                .WithMany()
                 .HasForeignKey(p => p.OrderId)
                 .OnDelete(DeleteBehavior.Restrict);
         }

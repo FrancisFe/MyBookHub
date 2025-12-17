@@ -160,7 +160,7 @@ namespace BibliotecaDevlight.Data.Seeders
                     StockPurchase = 10,
                     StockRental = 5,
                     ImageUrl = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400",
-                    PublishedDate = new DateTime(1949, 6, 8),
+                    PublishedDate = DateTime.SpecifyKind(new DateTime(1949, 6, 8), DateTimeKind.Utc),
                     CategoryId = categories[0].Id, // Ficción
                     AuthorId = authors[0].Id // George Orwell
                 },
@@ -174,7 +174,7 @@ namespace BibliotecaDevlight.Data.Seeders
                     StockPurchase = 8,
                     StockRental = 4,
                     ImageUrl = "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400",
-                    PublishedDate = new DateTime(1967, 5, 30),
+                    PublishedDate = DateTime.SpecifyKind(new DateTime(1967, 5, 30), DateTimeKind.Utc),
                     CategoryId = categories[0].Id, // Ficción
                     AuthorId = authors[1].Id // Gabriel García Márquez
                 },
@@ -188,7 +188,7 @@ namespace BibliotecaDevlight.Data.Seeders
                     StockPurchase = 15,
                     StockRental = 8,
                     ImageUrl = "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400",
-                    PublishedDate = new DateTime(1997, 6, 26),
+                    PublishedDate = DateTime.SpecifyKind(new DateTime(1997, 6, 26), DateTimeKind.Utc),
                     CategoryId = categories[2].Id, // Fantasía
                     AuthorId = authors[2].Id // J.K. Rowling
                 },
@@ -202,7 +202,7 @@ namespace BibliotecaDevlight.Data.Seeders
                     StockPurchase = 7,
                     StockRental = 3,
                     ImageUrl = "https://images.unsplash.com/photo-1531976283823-ff4d70a477ab?w=400",
-                    PublishedDate = new DateTime(1951, 5, 1),
+                    PublishedDate = DateTime.SpecifyKind(new DateTime(1951, 5, 1), DateTimeKind.Utc),
                     CategoryId = categories[1].Id, // Ciencia Ficción
                     AuthorId = authors[3].Id // Isaac Asimov
                 },
@@ -216,7 +216,7 @@ namespace BibliotecaDevlight.Data.Seeders
                     StockPurchase = 12,
                     StockRental = 6,
                     ImageUrl = "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=400",
-                    PublishedDate = new DateTime(2008, 8, 1),
+                    PublishedDate = DateTime.SpecifyKind(new DateTime(2008, 8, 1), DateTimeKind.Utc),
                     CategoryId = categories[3].Id, // Tecnología
                     AuthorId = authors[4].Id // Robert Martin
                 },
@@ -230,7 +230,7 @@ namespace BibliotecaDevlight.Data.Seeders
                     StockPurchase = 20,
                     StockRental = 10,
                     ImageUrl = "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400",
-                    PublishedDate = new DateTime(1988, 1, 1),
+                    PublishedDate = DateTime.SpecifyKind(new DateTime(1988, 1, 1), DateTimeKind.Utc),
                     CategoryId = categories[4].Id, // Autoayuda
                     AuthorId = authors[5].Id // Paulo Coelho
                 },
@@ -244,7 +244,7 @@ namespace BibliotecaDevlight.Data.Seeders
                     StockPurchase = 10,
                     StockRental = 5,
                     ImageUrl = "https://images.unsplash.com/photo-1589998059171-988d887df646?w=400",
-                    PublishedDate = new DateTime(1954, 7, 29),
+                    PublishedDate = DateTime.SpecifyKind(new DateTime(1954, 7, 29), DateTimeKind.Utc),
                     CategoryId = categories[2].Id, // Fantasía
                     AuthorId = authors[6].Id // J.R.R. Tolkien
                 },
@@ -258,7 +258,7 @@ namespace BibliotecaDevlight.Data.Seeders
                     StockPurchase = 6,
                     StockRental = 3,
                     ImageUrl = "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400",
-                    PublishedDate = new DateTime(1605, 1, 16),
+                    PublishedDate = DateTime.SpecifyKind(new DateTime(1605, 1, 16), DateTimeKind.Utc),
                     CategoryId = categories[6].Id, // Clásicos
                     AuthorId = authors[7].Id // Miguel de Cervantes
                 },
@@ -272,7 +272,7 @@ namespace BibliotecaDevlight.Data.Seeders
                     StockPurchase = 25,
                     StockRental = 12,
                     ImageUrl = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400",
-                    PublishedDate = new DateTime(1943, 4, 6),
+                    PublishedDate = DateTime.SpecifyKind(new DateTime(1943, 4, 6), DateTimeKind.Utc),
                     CategoryId = categories[6].Id, // Clásicos
                     AuthorId = authors[8].Id // Antoine de Saint-Exupéry
                 },
@@ -286,7 +286,7 @@ namespace BibliotecaDevlight.Data.Seeders
                     StockPurchase = 9,
                     StockRental = 4,
                     ImageUrl = "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400",
-                    PublishedDate = new DateTime(1950, 12, 2),
+                    PublishedDate = DateTime.SpecifyKind(new DateTime(1950, 12, 2), DateTimeKind.Utc),
                     CategoryId = categories[1].Id, // Ciencia Ficción
                     AuthorId = authors[3].Id // Isaac Asimov
                 }

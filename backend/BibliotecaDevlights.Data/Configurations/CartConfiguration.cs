@@ -8,6 +8,8 @@ namespace BibliotecaDevlights.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Cart> builder)
         {
+
+            builder.ToTable("carts");
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.Id)
@@ -22,11 +24,11 @@ namespace BibliotecaDevlights.Data.Configurations
 
             builder.Property(c => c.CreatedAt)
                 .IsRequired()
-                .HasDefaultValueSql("GETUTCDATE()");
+                .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
             builder.Property(c => c.UpdatedAt)
                 .IsRequired()
-                .HasDefaultValueSql("GETUTCDATE()");
+                .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
 
             // Relaciones
             builder.HasOne(c => c.User)
@@ -43,7 +45,6 @@ namespace BibliotecaDevlights.Data.Configurations
             builder.HasIndex(c => c.UserId)
                 .IsUnique();
 
-            builder.ToTable("Carts");
         }
     }
 }

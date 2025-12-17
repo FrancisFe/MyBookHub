@@ -8,7 +8,7 @@ namespace BibliotecaDevlights.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Category> builder)
         {
-            builder.ToTable("Categories");
+            builder.ToTable("categories");
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Name)
                    .IsRequired()

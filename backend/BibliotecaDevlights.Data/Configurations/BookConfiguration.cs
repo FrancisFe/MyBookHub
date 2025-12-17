@@ -9,7 +9,7 @@ namespace BibliotecaDevlights.Data.Configurations
         public void Configure(EntityTypeBuilder<Book> builder)
         {
 
-            builder.ToTable("Books");
+            builder.ToTable("books");
 
 
             builder.HasKey(b => b.Id);
