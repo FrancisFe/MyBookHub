@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use server";
 
 import { isUserAdmin } from "@/features/auth/services/authService";
 import {
@@ -8,9 +7,8 @@ import {
 } from "@/features/types/category";
 import { getApiUrl } from "@/features/utils/baseURL";
 import { getAuthToken } from "@/lib/auth";
-import { revalidatePath } from "next/cache";
 
-const url = getApiUrl('/api/category');
+const url = getApiUrl("/api/category");
 
 export const CreateCategoryAction = async (
   categoryData: CreateCategoryDTO
@@ -45,7 +43,6 @@ export const CreateCategoryAction = async (
 
     const data = await response.json();
 
-      revalidatePath("/categories");
     return {
       success: true,
       message: "Categoría creada exitosamente",
@@ -94,7 +91,6 @@ export const UpdateCategoryAction = async (
 
     const data = await response.json();
 
-    revalidatePath("/categories");
     return {
       success: true,
       message: "Categoría actualizada exitosamente",
@@ -138,7 +134,7 @@ export const DeleteCategoryAction = async (
           `Error ${response.status}: Error al eliminar categoría`
       );
     }
-    revalidatePath("/categories");
+
     return {
       success: true,
       message: "Categoría eliminada exitosamente",

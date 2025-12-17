@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use server";
+
 
 import { AddToCartDTO } from "@/features/types/cartItems";
 import { Cart } from "@/features/types/cart";
-import { revalidatePath } from "next/cache";
+
 
 import { getAuthToken } from "@/lib/auth";
 import { getApiUrl } from "@/features/utils/baseURL";
@@ -37,7 +37,7 @@ export const addItemToCartAction = async (
     }
 
     const data = await response.json();
-    revalidatePath("/cart");
+
     return { success: true, message: "Item agregado", data };
   } catch (error) {
     return {
@@ -73,7 +73,6 @@ export const updateCartItemAction = async (
     if (!response.ok) throw new Error(`Error: ${response.status}`);
 
     const data = await response.json();
-    revalidatePath("/cart");
 
     return { success: true, message: "Item actualizado", data };
   } catch (error) {
@@ -105,7 +104,6 @@ export const removeItemFromCartAction = async (
 
     if (!response.ok) throw new Error(`Error: ${response.status}`);
 
-    revalidatePath("/cart");
     return { success: true, message: "Item eliminado" };
   } catch (error) {
     return {
@@ -137,7 +135,7 @@ export const clearCartAction = async (): Promise<{
 
     if (!response.ok) throw new Error(`Error: ${response.status}`);
 
-    revalidatePath("/cart");
+
     return { success: true, message: "Carrito vaciado" };
   } catch (error) {
     return {

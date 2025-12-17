@@ -1,10 +1,8 @@
-"use server";
-
 
 import { Order } from "@/features/types/order";
 import { getApiUrl } from "@/features/utils/baseURL";
 import { getAuthToken } from "@/lib/auth";
-import { revalidatePath } from "next/cache";
+
 
 export const CreateOrdersFromCartAction = async (): Promise<{ 
   success: boolean; 
@@ -36,9 +34,7 @@ export const CreateOrdersFromCartAction = async (): Promise<{
     
     const data = await response.json();
     
-    revalidatePath('/books'); 
-    revalidatePath('/cart'); 
-    
+
     return { success: true, message: "Orden creada exitosamente", data };
     
   } catch (error) {

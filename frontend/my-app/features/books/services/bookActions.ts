@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use server";
+
 
 import { CreateBookDTO, UpdateBookDTO } from "../../types/book";
-import { revalidatePath } from "next/cache";
+
 
 import { getAuthToken } from "../../../lib/auth";
 import { isUserAdmin } from "@/features/auth/services/authService";
@@ -16,6 +16,7 @@ export const createBookAction = async (
   bookData: CreateBookDTO
 ): Promise<{ success: boolean; message: string; data?: any }> => {
   try {
+    
     const token = await getAuthToken();
     if (!token) {
       return {
@@ -42,7 +43,7 @@ export const createBookAction = async (
   }
 
    const data = await response.json();
-    revalidatePath("/books");
+
 
     return {
       success: true,
@@ -93,7 +94,7 @@ export const updateBookAction = async (
   }
 
    const data = await response.json();
-    revalidatePath(`/books/${id}`);
+
 
     return {
       success: true,
@@ -139,9 +140,6 @@ export const deleteBookAction = async (
       const errorData = await response.json();
       throw new Error(errorData.message || `Error: ${response.status}`);
     }
-
-    revalidatePath("/books");
-
     return {
       success: true,
       message: "Libro eliminado exitosamente",

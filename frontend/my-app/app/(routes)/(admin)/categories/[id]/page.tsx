@@ -3,9 +3,7 @@ import { Tag, FileText, BookOpen, ArrowLeft, Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 interface CategoryDetailPageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function CategoryDetailPage({

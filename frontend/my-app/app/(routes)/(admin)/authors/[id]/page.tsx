@@ -4,9 +4,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 interface AuthorDetailPageProps {
-  params: {
-    id: string;
-  };
+ params: Promise<{ id: string }>;
 }
 
 export default async function AuthorDetailPage({ params }: AuthorDetailPageProps) {

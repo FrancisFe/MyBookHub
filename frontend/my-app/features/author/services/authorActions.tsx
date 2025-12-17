@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use server";
+
 
 import { isUserAdmin } from "@/features/auth/services/authService";
 import { CreateAuthorDTO, UpdateAuthorDTO } from "@/features/types/author";
 import { getApiUrl} from "@/features/utils/baseURL";
 import { getAuthToken } from "@/lib/auth";
-import { revalidatePath } from "next/cache";
+
 
 const url = getApiUrl('/api/author');
 
@@ -13,6 +13,7 @@ export const CreateAuthorAction = async (
   authorData: CreateAuthorDTO
 ): Promise<{ success: boolean; message: string; data?: any }> => {
   try {
+    
     const token = await getAuthToken();
     if (!token) {
       return {
@@ -47,7 +48,6 @@ export const CreateAuthorAction = async (
 
     const data = await response.json();
 
-    revalidatePath("/authors");
 
     return {
       success: true,
@@ -103,7 +103,6 @@ export const UpdateAuthorAction = async (
 
     const data = await response.json();
 
-    revalidatePath("/authors");
 
     return {
       success: true,
@@ -154,7 +153,7 @@ export const DeleteAuthorAction = async (
       );
     }
 
-    revalidatePath("/authors");
+
 
     return {
       success: true,
