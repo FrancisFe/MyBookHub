@@ -20,7 +20,9 @@ const updateBookForm: UpdateBookDTO = {
   authorId: "",
   categoryId: "",
 };
-
+export async function generateStaticParams() {
+  return [];
+}
 export default function EditBookPage() {
   const params = useParams();
   const bookId = params.id as string;

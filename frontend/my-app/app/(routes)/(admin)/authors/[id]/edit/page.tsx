@@ -7,7 +7,9 @@ import { UpdateAuthorDTO } from "@/features/types/author";
 import { Loader2, User, ArrowLeft, Save } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
+export async function generateStaticParams() {
+  return []; 
+}
 const updateAuthorForm: UpdateAuthorDTO = {
   firstName: "",
   lastName: "",

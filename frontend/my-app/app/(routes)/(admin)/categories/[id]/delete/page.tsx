@@ -7,6 +7,9 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Trash2, ArrowLeft, AlertTriangle, CheckCircle, Loader2, Tag } from "lucide-react";
 
+export async function generateStaticParams() {
+  return []; 
+}
 export default function DeleteCategoryPage() {
   const params = useParams();
   const categoryId = params.id as string;

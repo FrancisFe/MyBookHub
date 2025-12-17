@@ -6,7 +6,9 @@ import { getAuthorById } from "@/features/author/services/authorService";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Trash2, ArrowLeft, AlertTriangle, CheckCircle, Loader2 } from "lucide-react";
-
+export async function generateStaticParams() {
+  return []; 
+}
 export default function DeleteAuthorPage() {
   const params = useParams();
   const authorId = params.id as string;

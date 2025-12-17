@@ -7,11 +7,12 @@ import { BookDetailActions } from "@/features/books/components/bookDetailActions
 import { ArrowLeft, BookOpen, Tag, User, Bookmark, Edit, Trash2, ShoppingCart } from "lucide-react";
 
 interface BookDetailPageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>; 
 }
 
+export async function generateStaticParams() {
+  return []; 
+}
 export default async function BookDetailPage({ params }: BookDetailPageProps) {
   const { id } = await params;
   const book = await getBookById(id);

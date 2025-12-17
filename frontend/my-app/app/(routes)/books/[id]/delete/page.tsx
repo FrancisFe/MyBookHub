@@ -6,7 +6,9 @@ import { getBookById } from "@/features/books/services/bookService";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Trash2, ArrowLeft, AlertTriangle, CheckCircle, Loader2, BookOpen } from "lucide-react";
-
+export async function generateStaticParams() {
+  return [];
+}
 export default function DeleteBookPage() {
   const params = useParams();
   const bookId = params.id as string;

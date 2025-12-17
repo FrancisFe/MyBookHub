@@ -19,7 +19,7 @@ export const getBooks = async (): Promise<BookDTO[]> => {
       headers: {
         "Content-Type": "application/json",
       },
-      next: { revalidate: 0, tags: ['books'] },
+     
     });
 
     if (!response.ok) {

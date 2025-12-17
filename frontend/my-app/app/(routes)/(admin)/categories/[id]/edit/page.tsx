@@ -7,6 +7,9 @@ import { Loader2, Tag, FileText, ArrowLeft, Save } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+export async function generateStaticParams() {
+  return []; 
+}
 const updateCategoryFrom: UpdateCategoryDTO = {
   name: "",
   description: "",
