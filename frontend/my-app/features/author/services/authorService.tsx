@@ -1,7 +1,8 @@
-import { env } from "@/config/env";
-import { Author, AuthorDTO } from "@/features/types/author";
 
-const url = `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/author`;
+import { Author, AuthorDTO } from "@/features/types/author";
+import { getApiUrl } from "@/features/utils/baseURL";
+
+const url = getApiUrl('/api/author');
 
 export const getAuthors = async (): Promise<AuthorDTO[]> => {
   try {

@@ -3,11 +3,12 @@
 
 import { CreateBookDTO, UpdateBookDTO } from "../../types/book";
 import { revalidatePath } from "next/cache";
-import { env } from "../../../config/env";
+
 import { getAuthToken } from "../../../lib/auth";
 import { isUserAdmin } from "@/features/auth/services/authService";
+import { getApiUrl } from "@/features/utils/baseURL";
 
-const url = `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/book`;
+const url = getApiUrl('/api/book');
 /**
  * Crear un nuevo libro
  */

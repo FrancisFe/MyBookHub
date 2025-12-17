@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { env } from "@/config/env";
 import { isUserAdmin } from "@/features/auth/services/authService";
 import { CreateAuthorDTO, UpdateAuthorDTO } from "@/features/types/author";
+import { getApiUrl} from "@/features/utils/baseURL";
 import { getAuthToken } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
-const url = `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/author`;
+const url = getApiUrl('/api/author');
 
 export const CreateAuthorAction = async (
   authorData: CreateAuthorDTO

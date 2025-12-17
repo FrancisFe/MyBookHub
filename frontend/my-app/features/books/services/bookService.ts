@@ -1,10 +1,14 @@
 import { BookDetailsDTO, BookDTO } from "@/features/types/book";
-import { env } from "@/config/env";
+import { getApiUrl } from "@/features/utils/baseURL";
+
 
 if (process.env.NODE_ENV === "development") {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }
-const url = `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/book`;
+
+
+const url = getApiUrl('/api/book');
+
 /** * Obtener todos los libros
  */
 export const getBooks = async (): Promise<BookDTO[]> => {

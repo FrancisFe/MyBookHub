@@ -1,7 +1,8 @@
 "use server";
 
-import { env } from "@/config/env";
+
 import { Order } from "@/features/types/order";
+import { getApiUrl } from "@/features/utils/baseURL";
 import { getAuthToken } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
@@ -17,7 +18,7 @@ export const CreateOrdersFromCartAction = async (): Promise<{
     }
     
     const response = await fetch(
-      `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/order`,
+      getApiUrl('/api/order'),
       {
         method: "POST",
         headers: {

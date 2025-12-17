@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
-import { env } from "@/config/env";
+
 import { isUserAdmin } from "@/features/auth/services/authService";
 import {
   CreateCategoryDTO,
   UpdateCategoryDTO,
 } from "@/features/types/category";
+import { getApiUrl } from "@/features/utils/baseURL";
 import { getAuthToken } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
-const url = `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/category`;
+const url = getApiUrl('/api/category');
 
 export const CreateCategoryAction = async (
   categoryData: CreateCategoryDTO

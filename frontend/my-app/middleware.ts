@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtDecode } from "jwt-decode";
-import { env } from "./config/env";
+
 
 const TOKEN_NAME = "authToken";
 
@@ -8,10 +8,19 @@ interface JWTPayload {
   exp: number;
 }
 
+// Reutiliza la misma lógica que baseURL.ts para compatibilidad con AWS/nginx
+const getBackendUrl = (): string => {
+  if (process.env.NODE_ENV === 'development') {
+    return 'http://localhost:5140'; // Backend directo en desarrollo
+  }
+  return 'http://localhost:3000'; // En producción nginx maneja el proxy
+};
+
 async function isAdmin(token: string): Promise<boolean> {
   try {
+    const backendUrl = getBackendUrl();
     const res = await fetch(
-      `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/auth/is-admin`,
+      `${backendUrl}/api/auth/is-admin`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }

@@ -4,10 +4,11 @@
 import { AddToCartDTO } from "@/features/types/cartItems";
 import { Cart } from "@/features/types/cart";
 import { revalidatePath } from "next/cache";
-import { env } from "@/config/env";
-import { getAuthToken } from "@/lib/auth";
 
-const url = `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/cart`;
+import { getAuthToken } from "@/lib/auth";
+import { getApiUrl } from "@/features/utils/baseURL";
+
+const url = getApiUrl('/api/cart');
 
 /**
  * Agregar item al carrito

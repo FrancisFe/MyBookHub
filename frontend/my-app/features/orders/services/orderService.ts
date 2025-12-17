@@ -1,10 +1,10 @@
 "use server";
 import { Order, OrderDto } from "@/features/types/order";
-import { env } from "@/config/env";
+import { getApiUrl } from "@/features/utils/baseURL";
 import { getAuthToken } from "@/lib/auth";
 
-const url = `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/order`;
-
+const url = getApiUrl('/api/order');
+  
 /**
  * Obtener todas las órdenes del usuario actual (mis órdenes)
  */

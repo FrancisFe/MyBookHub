@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { env } from "../../../config/env";
+
+import { getApiUrl } from "@/features/utils/baseURL";
 import { getAuthToken } from "@/lib/auth";
 
 export interface LoginRequest {
@@ -21,7 +22,7 @@ export interface TokenResponse {
 
 export const loginUser = async (data: LoginRequest): Promise<TokenResponse> => {
   const response = await fetch(
-    `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/auth/login`,
+    getApiUrl('/api/auth/login'),
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -39,7 +40,7 @@ export const loginUser = async (data: LoginRequest): Promise<TokenResponse> => {
 
 export const registerUser = async (data: RegisterRequest): Promise<void> => {
   const response = await fetch(
-    `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/auth/register`,
+    getApiUrl('/api/auth/register'),
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -62,7 +63,7 @@ export const isUserAdmin = async (): Promise<boolean> => {
     }
 
     const response = await fetch(
-      `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/auth/is-admin`,
+      getApiUrl('/api/auth/is-admin'),
       {
         method: "GET",
         headers: {

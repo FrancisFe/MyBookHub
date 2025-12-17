@@ -1,9 +1,10 @@
-import { env } from "@/config/env";
+
 import { CategoryDTO } from "@/features/types/category";
+import { getApiUrl } from "@/features/utils/baseURL";
 
 
 
-const url = `${env.NEXT_PUBLIC_BACKEND_API_URL}/api/category`;
+const url = getApiUrl('/api/category');
 
 export const getCategories = async (): Promise<CategoryDTO[]> => {
     try{
