@@ -1,6 +1,5 @@
 export const getBaseUrl = (): string => {
-  return 'http://localhost:5000'; 
-
+  return '';
 };
 
 export const getApiUrl = (path: string): string => {
