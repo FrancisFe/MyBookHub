@@ -6,11 +6,11 @@ import { getAuthors } from "@/features/author/services/authorService";
 import { isAdmin } from "@/lib/auth";
 import { PlusCircle, User, BookOpen, Users} from "lucide-react";
 import Link from "next/link";
-import { Author } from "@/features/types/author";
+import { AuthorDTO } from "@/features/types/author";
 
 export default function AuthorsPage() {
   const router = useRouter();
-  const [authors, setAuthors] = useState<Author[]>([]);
+  const [authors, setAuthors] = useState<AuthorDTO[]>([]);
   const [userAdmin, setUserAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
