@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Biblioteca Devlights",
+  title: "Books Devlights",
   description: "Sistema de gestión de libros y alquileres",
 };
 
-// Eliminamos 'async' y la llamada a getCurrentUserId()
+
 export default function RootLayout({
   children,
 }: Readonly<{
