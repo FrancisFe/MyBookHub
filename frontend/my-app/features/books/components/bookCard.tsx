@@ -3,7 +3,7 @@
 
 import { BookDTO } from "@/features/types/book";
 import { useCart } from "@/context/cartContex";
-import { Edit3, ShoppingCart, Calendar, BookOpen,X } from "lucide-react";
+import { Edit3, ShoppingCart, Calendar, BookOpen,X, Eye } from "lucide-react";
 import Link from "next/link";
 
 interface BookCardProps {
@@ -157,6 +157,15 @@ export default function BookCard({ book, isAdmin }: BookCardProps) {
               </>
             )}
           </button>
+          <Link 
+            href={`/books/${book.id}`}
+            
+            className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 transition-all duration-300"
+            
+          >
+            <Eye className="w-4 h-4" />
+            <span>Ver Detalles</span>
+          </Link>
         </div>
       </div>
     </div>

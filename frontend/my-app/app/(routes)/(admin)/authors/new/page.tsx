@@ -2,8 +2,9 @@
 
 import { CreateAuthorAction } from "@/features/author/services/authorActions";
 import { CreateAuthorDTO } from "@/features/types/author";
+import { isAdmin } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserPlus, User, FileText, ArrowLeft, Save, Loader2 } from "lucide-react";
 import Link from "next/link";
 
@@ -18,6 +19,12 @@ export default function NewAuthorPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!isAdmin()) {
+      router.push('/authors');
+    }
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

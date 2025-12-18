@@ -1,9 +1,42 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { getAuthors } from "@/features/author/services/authorService";
+import { isAdmin } from "@/lib/auth";
 import { PlusCircle, User, BookOpen, Users} from "lucide-react";
 import Link from "next/link";
+import { Author } from "@/features/types/author";
 
-export default async function AuthorsPage() {
-  const authors = await getAuthors();
+export default function AuthorsPage() {
+  const router = useRouter();
+  const [authors, setAuthors] = useState<Author[]>([]);
+  const [userAdmin, setUserAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAdminAndFetch = async () => {
+      const isUserAdmin = isAdmin();
+      if (!isUserAdmin) {
+        router.push('/books');
+        return;
+      }
+      
+      const data = await getAuthors();
+      setAuthors(data);
+      setUserAdmin(true);
+      setLoading(false);
+    };
+    checkAdminAndFetch();
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen p-4 sm:p-6 bg-gray-900 flex items-center justify-center">
+        <div className="text-white">Cargando...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen p-4 sm:p-6 bg-gray-900">
@@ -25,13 +58,15 @@ export default async function AuthorsPage() {
               </div>
             </div>
 
-            <Link
-              href="authors/new"
-              className="group flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] w-fit"
-            >
-              <PlusCircle className="w-5 h-5" />
-              <span>Nuevo Autor</span>
-            </Link>
+            {userAdmin && (
+              <Link
+                href="authors/new"
+                className="group flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] w-fit"
+              >
+                <PlusCircle className="w-5 h-5" />
+                <span>Nuevo Autor</span>
+              </Link>
+            )}
           </div>
 
         </div>
@@ -40,7 +75,7 @@ export default async function AuthorsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {authors.map((author) => (
             <Link
-              href={`/authors/`}
+              href={`/authors/${author.id}`}
               key={author.id}
               className="group bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 overflow-hidden hover:border-gray-600 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
             >

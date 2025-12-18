@@ -1,8 +1,9 @@
 "use client";
 import { createBookAction } from "@/features/books/services/bookActions";
 import { CreateBookDTO } from "@/features/types/book";
+import { isAdmin } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const initialForm: CreateBookDTO = {
   title: "",
@@ -23,6 +24,12 @@ export default function NewBookPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!isAdmin()) {
+      router.push('/books');
+    }
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

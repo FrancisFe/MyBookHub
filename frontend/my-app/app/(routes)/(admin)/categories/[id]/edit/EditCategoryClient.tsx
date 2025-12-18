@@ -1,45 +1,45 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// app/categories/[id]/edit/EditCategoryClient.tsx
 "use client";
-import { CreateCategoryAction } from "@/features/categories/services/categoryActions";
-import { CreateCategoryDTO } from "@/features/types/category";
-import { isAdmin } from "@/lib/auth";
+
+import { UpdateCategoryAction } from "@/features/categories/services/categoryActions";
+import { UpdateCategoryDTO } from "@/features/types/category";
+import { Category } from "@/features/types/category";
+import { ArrowLeft, Loader2, Save, Tag, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { Plus, Tag, FileText, ArrowLeft, Save, Loader2 } from "lucide-react";
-import Link from "next/link";
+import { useState } from "react";
 
-const initialForm: CreateCategoryDTO = {
-  name: "",
-  description: "",
-};
+interface EditCategoryClientProps {
+  initialData: Category;
+  categoryId: string;
+}
 
-export default function NewCategoryPage() {
-  const [formData, setFormData] = useState<CreateCategoryDTO>(initialForm);
+export default function EditCategoryClient({ initialData, categoryId }: EditCategoryClientProps) {
+  // ✅ Ya no necesitas useEffect ni loadingData, los datos vienen del servidor
+  const [formData, setFormData] = useState<UpdateCategoryDTO>({
+    name: initialData.name,
+    description: initialData.description || "",
+  });
+  
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    if (!isAdmin()) {
-      router.push('/categories');
-    }
-  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    try {
-      const result = await CreateCategoryAction(formData);
-      if (!result.success) {
-        throw new Error(result.message);
-      }
 
-      if (result.data?.id) {
-        setFormData(initialForm);
-        router.push(`/categories/${result.data.id}`);
+    try {
+      const result = await UpdateCategoryAction(categoryId, formData);
+
+      if (result.success) {
+        router.push(`/categories/${categoryId}`);
+      } else {
+        setError(result.message);
       }
-    } catch (error) {
-      setError(error instanceof Error ? error.message : "Error desconocido");
+    } catch (err) {
+      setError("Error al actualizar la categoría.");
     } finally {
       setLoading(false);
     }
@@ -50,24 +50,24 @@ export default function NewCategoryPage() {
       <div className="max-w-md mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <Link
-            href="/categories"
+          <button
+            onClick={() => router.back()}
             className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
-            Volver a Categorías
-          </Link>
+            Volver
+          </button>
           
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-gradient-to-br from-green-900/20 to-emerald-900/10 rounded-lg border border-gray-700">
-              <Plus className="w-8 h-8 text-green-400" />
+            <div className="p-2 bg-gray-800 rounded-lg border border-gray-700">
+              <Tag className="w-8 h-8 text-blue-400" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-white">
-              Nueva Categoría
+              Editar Categoría
             </h1>
           </div>
           <p className="text-gray-400">
-            Completa los datos para agregar una nueva categoría
+            Actualiza la información de la categoría
           </p>
         </div>
 
@@ -91,8 +91,8 @@ export default function NewCategoryPage() {
                   id="name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
                   className="w-full pl-11 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                  required
                   placeholder="Nombre de la categoría"
                 />
               </div>
@@ -121,17 +121,17 @@ export default function NewCategoryPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white py-4 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
                 {loading ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Creando categoría...
+                    Actualizando...
                   </>
                 ) : (
                   <>
                     <Save className="w-5 h-5" />
-                    Crear Categoría
+                    Actualizar Categoría
                   </>
                 )}
               </button>
@@ -139,11 +139,16 @@ export default function NewCategoryPage() {
           </form>
         </div>
 
-        {/* Notas */}
-        <div className="mt-6 p-4 bg-gray-800/30 rounded-lg border border-gray-700">
-          <p className="text-gray-400 text-sm text-center">
-            Los campos marcados con * son obligatorios
-          </p>
+        {/* Información adicional */}
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-4">
+            <p className="text-gray-400 text-sm mb-1">ID de la categoría</p>
+            <p className="text-gray-300 text-sm font-mono">{categoryId}</p>
+          </div>
+          <div className="bg-gray-800/30 rounded-lg border border-gray-700 p-4">
+            <p className="text-gray-400 text-sm mb-1">Estado</p>
+            <p className="text-blue-400 text-sm font-medium">Editando</p>
+          </div>
         </div>
       </div>
     </div>
