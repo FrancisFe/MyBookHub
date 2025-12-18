@@ -24,7 +24,6 @@ export default function EditCategoryClient({ initialData, categoryId }: EditCate
   
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [userAdmin, setUserAdmin] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const router = useRouter();
 
@@ -35,8 +34,6 @@ export default function EditCategoryClient({ initialData, categoryId }: EditCate
         router.push('/books');
         return;
       }
-      
-      setUserAdmin(true);
       setCheckingAuth(false);
     };
     checkAdminAndFetch();

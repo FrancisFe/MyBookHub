@@ -24,7 +24,7 @@ export default function DeleteBookClient({ bookId, bookTitle }: DeleteBookClient
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  const [userAdmin, setUserAdmin] = useState(false);
+
   const [checkingAuth, setCheckingAuth] = useState(true);
 
   // ✅ Ya no necesitas useEffect para cargar datos, vienen del servidor
@@ -38,7 +38,7 @@ export default function DeleteBookClient({ bookId, bookTitle }: DeleteBookClient
         return;
       }
       
-      setUserAdmin(true);
+
       setCheckingAuth(false);
     };
     checkAdminAndFetch();

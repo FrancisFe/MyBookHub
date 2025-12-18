@@ -33,7 +33,6 @@ export function setAuthToken(token: string) {
     if (name) localStorage.setItem(USER_NAME, name);
     if (role) localStorage.setItem(USER_ROLE, role);
     
-    console.log("Datos guardados en LocalStorage:", { id, name, role });
   }
   
   window.dispatchEvent(new Event("storage"));

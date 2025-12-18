@@ -24,11 +24,7 @@ export default function DeleteCategoryClient({ categoryId, categoryName }: Delet
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  const [userAdmin, setUserAdmin] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
-
-  // ✅ Ya no necesitas useEffect para cargar datos, vienen del servidor
-  // ✅ Ya no necesitas loadingData state
 
   useEffect(() => {
     const checkAdminAndFetch = async () => {
@@ -37,8 +33,7 @@ export default function DeleteCategoryClient({ categoryId, categoryName }: Delet
         router.push('/books');
         return;
       }
-      
-      setUserAdmin(true);
+    
       setCheckingAuth(false);
     };
     checkAdminAndFetch();

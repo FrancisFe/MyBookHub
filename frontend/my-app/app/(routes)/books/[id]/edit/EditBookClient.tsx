@@ -33,7 +33,6 @@ export default function EditBookClient({ initialData, bookId }: EditBookClientPr
   
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [userAdmin, setUserAdmin] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const router = useRouter();
 
@@ -45,7 +44,6 @@ export default function EditBookClient({ initialData, bookId }: EditBookClientPr
         return;
       }
       
-      setUserAdmin(true);
       setCheckingAuth(false);
     };
     checkAdminAndFetch();

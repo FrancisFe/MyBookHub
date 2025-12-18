@@ -2,7 +2,6 @@
 "use client";
 
 import { Author } from "@/features/types/author";
-import { useRouter } from "next/navigation";
 import { User, BookOpen, FileText, Calendar, ArrowLeft, Search } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -13,7 +12,6 @@ interface AuthorDetailClientProps {
 }
 
 export default function AuthorDetailClient({ author }: AuthorDetailClientProps) {
-  const router = useRouter();
   const [userAdmin, setUserAdmin] = useState(false);
   const [mounted, setMounted] = useState(false);
 

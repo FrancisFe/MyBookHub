@@ -2,7 +2,7 @@
 "use client";
 
 import { Category } from "@/features/types/category";
-import { useRouter } from "next/navigation";
+
 import { Tag, FileText, BookOpen, ArrowLeft, Edit, Trash2, Search } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -13,7 +13,6 @@ interface CategoryDetailClientProps {
 }
 
 export default function CategoryDetailClient({ category }: CategoryDetailClientProps) {
-  const router = useRouter();
   const [userAdmin, setUserAdmin] = useState(false);
   const [mounted, setMounted] = useState(false);
 

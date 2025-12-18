@@ -25,7 +25,6 @@ export default function EditAuthorClient({ initialData, authorId }: EditAuthorCl
   
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [userAdmin, setUserAdmin] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const router = useRouter();
 
@@ -36,8 +35,6 @@ export default function EditAuthorClient({ initialData, authorId }: EditAuthorCl
         router.push('/books');
         return;
       }
-      
-      setUserAdmin(true);
       setCheckingAuth(false);
     };
     checkAdminAndFetch();
