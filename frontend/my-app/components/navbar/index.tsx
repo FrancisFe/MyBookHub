@@ -88,41 +88,40 @@ export default function Navbar() {
 
         {/* Centro: Admin Dropdown */}
         <div className="flex items-center gap-4">
-          {auth.admin && (
-            <div className="relative" ref={dropdownRef}>
-              <button 
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
-                  isDropdownOpen 
-                    ? 'bg-gray-800 text-white border border-gray-600' 
-                    : 'text-gray-300 hover:text-white hover:bg-gray-800'
-                }`}
-              >
-                <div className="w-6 h-6 bg-blue-900/30 rounded flex items-center justify-center">
-                  <ChevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
-                </div>
-                <span>Administración</span>
-              </button>
+          <div className="relative" ref={dropdownRef}>
+            <button 
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                isDropdownOpen 
+                  ? 'bg-gray-800 text-white border border-gray-600' 
+                  : 'text-gray-300 hover:text-white hover:bg-gray-800'
+              }`}
+            >
+              <div className="w-6 h-6 bg-blue-900/30 rounded flex items-center justify-center">
+                <ChevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+              </div>
+              <span>Catálogo</span>
+            </button>
 
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-gray-800 border border-gray-700 rounded-xl shadow-xl py-3 z-50">
-                  <div className="px-4 py-2 border-b border-gray-700">
-                    <p className="text-sm font-medium text-white">Panel Admin</p>
-                    <p className="text-xs text-gray-400">Recursos exclusivos</p>
-                  </div>
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-56 bg-gray-800 border border-gray-700 rounded-xl shadow-xl py-3 z-50">
+                <div className="px-4 py-2 border-b border-gray-700">
+                  <p className="text-sm font-medium text-white">Biblioteca</p>
+                  <p className="text-xs text-gray-400">Explora nuestro acervo</p>
+                </div>
                   
-                  <div className="py-2">
-                    <Link 
-                      href="/authors" 
-                      onClick={() => setIsDropdownOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors"
-                    >
-                      <div className="p-2 bg-gray-700/50 rounded">
+                <div className="py-2">
+                  <Link 
+                    href="/authors" 
+                    onClick={() => setIsDropdownOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors"
+                  >
+                    <div className="p-2 bg-gray-700/50 rounded">
                         <Users className="w-4 h-4" />
                       </div>
                       <div>
                         <p className="font-medium">Autores</p>
-                        <p className="text-xs text-gray-400">Gestionar autores</p>
+                        <p className="text-xs text-gray-400">Explora nuestros autores</p>
                       </div>
                     </Link>
                     
@@ -136,14 +135,13 @@ export default function Navbar() {
                       </div>
                       <div>
                         <p className="font-medium">Categorías</p>
-                        <p className="text-xs text-gray-400">Gestionar categorías</p>
+                        <p className="text-xs text-gray-400">Explora nuestras categorías</p>
                       </div>
                     </Link>
                   </div>
                 </div>
               )}
             </div>
-          )}
         </div>
 
         {/* Derecha: Carrito, Órdenes y Auth */}

@@ -50,7 +50,7 @@ export default function AdminDropdown() {
           <div className="p-1 bg-gradient-to-br from-yellow-900/20 to-yellow-800/10 rounded border border-yellow-800/30">
             <Settings className="w-4 h-4 text-yellow-400" />
           </div>
-          <span className="font-medium">Administración</span>
+          <span className="font-medium">Gestión</span>
         </div>
         <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
@@ -65,7 +65,7 @@ export default function AdminDropdown() {
                 <Shield className="w-5 h-5 text-yellow-400" />
               </div>
               <div>
-                <h3 className="font-bold text-white">Panel de Administración</h3>
+                <h3 className="font-bold text-white">Panel de Gestión</h3>
                 <p className="text-gray-400 text-xs">Recursos exclusivos para administradores</p>
               </div>
             </div>

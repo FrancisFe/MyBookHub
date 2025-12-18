@@ -4,6 +4,7 @@
 import { DeleteAuthorAction } from "@/features/author/services/authorActions";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { isAdmin } from "@/lib/auth";
 import {
   Trash2,
   ArrowLeft,
@@ -22,9 +23,25 @@ export default function DeleteAuthorClient({ authorId, authorName }: DeleteAutho
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [userAdmin, setUserAdmin] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   // ✅ Ya no necesitas useEffect para cargar datos, vienen del servidor
   // ✅ Ya no necesitas loadingData state
+
+  useEffect(() => {
+    const checkAdminAndFetch = async () => {
+      const isUserAdmin = isAdmin();
+      if (!isUserAdmin) {
+        router.push('/books');
+        return;
+      }
+      
+      setUserAdmin(true);
+      setCheckingAuth(false);
+    };
+    checkAdminAndFetch();
+  }, [router]);
 
   useEffect(() => {
     if (success) {
@@ -35,6 +52,14 @@ export default function DeleteAuthorClient({ authorId, authorName }: DeleteAutho
       return () => clearTimeout(timer);
     }
   }, [success, router]);
+
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen p-4 sm:p-6 bg-gray-900 flex items-center justify-center">
+        <div className="text-white">Cargando...</div>
+      </div>
+    );
+  }
 
   const handleDelete = async () => {
     setError("");

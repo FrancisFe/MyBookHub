@@ -7,7 +7,8 @@ import { UpdateCategoryDTO } from "@/features/types/category";
 import { Category } from "@/features/types/category";
 import { ArrowLeft, Loader2, Save, Tag, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { isAdmin } from "@/lib/auth";
 
 interface EditCategoryClientProps {
   initialData: Category;
@@ -23,7 +24,31 @@ export default function EditCategoryClient({ initialData, categoryId }: EditCate
   
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userAdmin, setUserAdmin] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    const checkAdminAndFetch = async () => {
+      const isUserAdmin = isAdmin();
+      if (!isUserAdmin) {
+        router.push('/books');
+        return;
+      }
+      
+      setUserAdmin(true);
+      setCheckingAuth(false);
+    };
+    checkAdminAndFetch();
+  }, [router]);
+
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen p-4 sm:p-6 bg-gray-900 flex items-center justify-center">
+        <div className="text-white">Cargando...</div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

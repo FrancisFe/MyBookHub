@@ -1,42 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { getCategories } from "@/features/categories/services/categoryService";
-import { isAdmin } from "@/lib/auth";
-import { Tag, PlusCircle , List, Grid3x3 } from "lucide-react";
+import { Tag, PlusCircle , List, Grid3x3, Search } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { isAdmin } from "@/lib/auth";
 import { CategoryDTO } from "@/features/types/category";
 
 export default function CategoriesPage() {
-  const router = useRouter();
   const [categories, setCategories] = useState<CategoryDTO[]>([]);
   const [userAdmin, setUserAdmin] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAdminAndFetch = async () => {
       const isUserAdmin = isAdmin();
-      if (!isUserAdmin) {
-        router.push('/books');
-        return;
-      }
-      
+      setUserAdmin(isUserAdmin);
       const data = await getCategories();
       setCategories(data);
-      setUserAdmin(true);
+      setMounted(true);
       setLoading(false);
     };
     checkAdminAndFetch();
-  }, [router]);
+  }, []);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen p-4 sm:p-6 bg-gray-900 flex items-center justify-center">
-        <div className="text-white">Cargando...</div>
-      </div>
-    );
-  }
+  if (!mounted || loading) return null;
 
   return (
     <div className="min-h-screen p-4 sm:p-6 bg-gray-900">
@@ -60,7 +49,7 @@ export default function CategoriesPage() {
 
             {userAdmin && (
               <Link
-                href="categories/new"
+                href="/categories/new"
                 className="group flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] w-fit"
               >
                 <PlusCircle className="w-5 h-5" />
@@ -73,12 +62,14 @@ export default function CategoriesPage() {
         {/* Grid de categorías */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {categories.map((category) => (
-            <Link
-              href={`/categories/${category.id}`}
+            <div
               key={category.id}
-              className="group bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 overflow-hidden hover:border-gray-600 transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
+              className="group bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 overflow-hidden hover:border-gray-600 transition-all duration-300 hover:shadow-xl flex flex-col"
             >
-              <div className="p-6">
+              <Link
+                href={`/categories/${category.id}`}
+                className="flex-1 p-6 hover:bg-gray-800/50 transition-colors"
+              >
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-900/20 to-purple-900/20 rounded-full flex items-center justify-center flex-shrink-0">
                     <Tag className="w-6 h-6 text-blue-400" />
@@ -113,8 +104,19 @@ export default function CategoriesPage() {
                     →
                   </span>
                 </div>
+              </Link>
+
+              {/* Botón de búsqueda */}
+              <div className="px-6 py-3 border-t border-gray-700 bg-gray-800/30">
+                <Link
+                  href={`/books?query=${encodeURIComponent(category.name)}`}
+                  className="flex items-center justify-center gap-2 text-sm text-purple-400 hover:text-purple-300 transition-colors"
+                >
+                  <Search className="w-4 h-4" />
+                  Buscar en libros
+                </Link>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
 

@@ -2,11 +2,11 @@
 "use client";
 
 import { Category } from "@/features/types/category";
-import { isAdmin } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { Tag, FileText, BookOpen, ArrowLeft, Edit, Trash2 } from "lucide-react";
+import { Tag, FileText, BookOpen, ArrowLeft, Edit, Trash2, Search } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { isAdmin } from "@/lib/auth";
 
 interface CategoryDetailClientProps {
   category: Category;
@@ -18,14 +18,9 @@ export default function CategoryDetailClient({ category }: CategoryDetailClientP
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const isUserAdmin = isAdmin();
-    if (!isUserAdmin) {
-      router.push('/books');
-      return;
-    }
-    setUserAdmin(true);
+    setUserAdmin(isAdmin());
     setMounted(true);
-  }, [router]);
+  }, []);
 
   if (!mounted) return null;
 
@@ -105,6 +100,17 @@ export default function CategoryDetailClient({ category }: CategoryDetailClientP
             <p className="text-gray-400 text-sm mb-1">Estado</p>
             <p className="text-green-400 font-medium">Activa</p>
           </div>
+        </div>
+
+        {/* Botón de búsqueda por categoría */}
+        <div className="mb-8">
+          <Link
+            href={`/books?query=${encodeURIComponent(category.name)}`}
+            className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white py-3 rounded-lg font-medium hover:from-purple-700 hover:to-purple-800 transition-all"
+          >
+            <Search className="w-4 h-4" />
+            Ver libros de esta categoría
+          </Link>
         </div>
 
         {/* Acciones */}

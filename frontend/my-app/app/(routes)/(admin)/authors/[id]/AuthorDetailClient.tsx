@@ -2,11 +2,11 @@
 "use client";
 
 import { Author } from "@/features/types/author";
-import { isAdmin } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { User, BookOpen, FileText, Calendar, ArrowLeft } from "lucide-react";
+import { User, BookOpen, FileText, Calendar, ArrowLeft, Search } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { isAdmin } from "@/lib/auth";
 
 interface AuthorDetailClientProps {
   author: Author;
@@ -18,14 +18,9 @@ export default function AuthorDetailClient({ author }: AuthorDetailClientProps) 
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const isUserAdmin = isAdmin();
-    if (!isUserAdmin) {
-      router.push('/books');
-      return;
-    }
-    setUserAdmin(true);
+    setUserAdmin(isAdmin());
     setMounted(true);
-  }, [router]);
+  }, []);
 
   if (!mounted) return null;
 
@@ -109,6 +104,17 @@ export default function AuthorDetailClient({ author }: AuthorDetailClientProps) 
             <p className="text-gray-400 text-sm mb-1">Estado</p>
             <p className="text-green-400 font-medium">Activo</p>
           </div>
+        </div>
+
+        {/* Botón de búsqueda por autor */}
+        <div className="mb-8">
+          <Link
+            href={`/books?query=${encodeURIComponent(author.lastName)}`}
+            className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white py-3 rounded-lg font-medium hover:from-purple-700 hover:to-purple-800 transition-all"
+          >
+            <Search className="w-4 h-4" />
+            Ver libros de este autor
+          </Link>
         </div>
 
         {/* Acciones */}
