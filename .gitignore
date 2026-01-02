@@ -3,6 +3,25 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# ==================== INFORMACIÓN SENSIBLE ====================
+# Archivos de configuración con credenciales
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+.env
+.env.local
+.env.*.local
+.env.production.local
+
+# User Secrets
+secrets.json
+user-secrets.xml
+
+# Variables de entorno
+*.env
+
+# ==================== FIN INFORMACIÓN SENSIBLE ====================
+
 # User-specific files
 *.rsuser
 *.suo
