@@ -1,6 +1,0 @@
-@BibliotecaDevlights.API_HostAddress = http://localhost:5140
-
-GET {{BibliotecaDevlights.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

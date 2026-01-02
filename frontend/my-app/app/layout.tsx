@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Books Devlights",
+  title: "MyBookHub",
   description: "Sistema de gestión de libros y alquileres",
 };
 

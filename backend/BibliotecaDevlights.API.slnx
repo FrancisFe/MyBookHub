@@ -1,5 +1,0 @@
-<Solution>
-  <Project Path="BibliotecaDevlights.API/BibliotecaDevlights.API.csproj" />
-  <Project Path="BibliotecaDevlights.Business/BibliotecaDevlights.Business.csproj" />
-  <Project Path="BibliotecaDevlights.Data/BibliotecaDevlights.Data.csproj" />
-</Solution>

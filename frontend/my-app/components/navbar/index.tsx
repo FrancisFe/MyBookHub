@@ -62,7 +62,7 @@ export default function Navbar() {
               <BookOpen className="w-5 h-5 text-blue-400" />
             </div>
             <span className="text-xl font-bold text-white">
-              Books Devlights
+              MyBookHub
             </span>
           </Link>
 

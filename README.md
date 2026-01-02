@@ -1,4 +1,4 @@
-# 📚 BibliotecaDevlights
+# 📚 MyBookHub
 
 **Una plataforma moderna de venta y alquiler de libros**
 
@@ -6,7 +6,7 @@
 
 ## 📖 Descripción
 
-BibliotecaDevlights es una aplicación full-stack que permite a los usuarios explorar, comprar y alquilar libros en línea. Ofrece una experiencia de usuario intuitiva con un catálogo extenso de títulos, carrito de compras, sistema de pedidos y procesamiento de pagos.
+MyBookHub es una aplicación full-stack que permite a los usuarios explorar, comprar y alquilar libros en línea. Ofrece una experiencia de usuario intuitiva con un catálogo extenso de títulos, carrito de compras, sistema de pedidos y procesamiento de pagos.
 
 ---
 
@@ -52,7 +52,7 @@ BibliotecaDevlights es una aplicación full-stack que permite a los usuarios exp
 
 1. **Navegar al directorio del backend**
 ```bash
-cd backend/BibliotecaDevlights.API
+cd backend/MyBookHub.API
 ```
 
 2. **Restaurar dependencias**
@@ -65,7 +65,7 @@ dotnet restore
    ```json
    {
      "ConnectionStrings": {
-       "DefaultConnection": "Host=localhost;Database=biblioteca_devlights;Username=usuario;Password=contraseña"
+       "DefaultConnection": "Host=localhost;Database=mybookhub;Username=usuario;Password=contraseña"
      }
    }
    ```
@@ -199,8 +199,8 @@ npm run lint
 
 ## 📧 Contacto
 
-**Biblioteca DevLights**
-- Email: contact@bibliotecadevlights.com
+**MyBookHub**
+- Email: contact@mybookhub.com
 - Website: (próximamente)
 
 ---

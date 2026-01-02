@@ -31,7 +31,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-white mb-1">Email</h3>
-                    <p className="text-gray-400">soporte@booksdevlights.com</p>
+                    <p className="text-gray-400">soporte@mybookhub.com</p>
                     <p className="text-gray-400 text-sm">Respuesta en 24-48 horas</p>
                   </div>
                 </div>

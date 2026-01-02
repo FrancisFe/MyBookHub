@@ -23,7 +23,7 @@ export default function Home() {
           </div>
           
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-            Bienvenido a <span className="text-blue-400">Books Devlights</span>
+            Bienvenido a <span className="text-blue-400">MyBookHub</span>
           </h1>
           
           <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-8">
@@ -56,7 +56,7 @@ export default function Home() {
       <div className="bg-gray-800/30 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-center mb-10">
-            ¿Por qué elegir Books Devlights?
+            ¿Por qué elegir MyBookHub?
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

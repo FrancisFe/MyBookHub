@@ -1,6 +1,6 @@
-﻿using BibliotecaDevlights.Data.Data;
-using BibliotecaDevlights.Data.Entities;
-using BibliotecaDevlights.Data.Enums;
+using MyBookHub.Data.Data;
+using MyBookHub.Data.Entities;
+using MyBookHub.Data.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace BibliotecaDevlight.Data.Seeders
@@ -31,7 +31,7 @@ namespace BibliotecaDevlight.Data.Seeders
                 new User
                 {
                     UserName = "usuario1",
-                    Email = "usuario1@bibliotecadevlights.com",
+                    Email = "usuario1@mybookhub.com",
                     PasswordHash = passwordHasher.HashPassword(null, "User123_"),
                     Role = UserRole.User,
                     CreatedAt = DateTime.UtcNow,
@@ -42,43 +42,43 @@ namespace BibliotecaDevlight.Data.Seeders
             context.Users.AddRange(users);
             context.SaveChanges();
 
-            // ===== CATEGORÍAS =====
+            // ===== CATEGOR�AS =====
             var categories = new Category[]
             {
                 new Category
                 {
-                    Name = "Ficción",
-                    Description = "Novelas y cuentos de ficción literaria"
+                    Name = "Ficci�n",
+                    Description = "Novelas y cuentos de ficci�n literaria"
                 },
                 new Category
                 {
-                    Name = "Ciencia Ficción",
-                    Description = "Historias futuristas y de ciencia ficción"
+                    Name = "Ciencia Ficci�n",
+                    Description = "Historias futuristas y de ciencia ficci�n"
                 },
                 new Category
                 {
-                    Name = "Fantasía",
-                    Description = "Mundos mágicos y fantásticos"
+                    Name = "Fantas�a",
+                    Description = "Mundos m�gicos y fant�sticos"
                 },
                 new Category
                 {
-                    Name = "Tecnología",
-                    Description = "Libros sobre programación, desarrollo y tecnología"
+                    Name = "Tecnolog�a",
+                    Description = "Libros sobre programaci�n, desarrollo y tecnolog�a"
                 },
                 new Category
                 {
                     Name = "Autoayuda",
-                    Description = "Desarrollo personal y motivación"
+                    Description = "Desarrollo personal y motivaci�n"
                 },
                 new Category
                 {
                     Name = "Historia",
-                    Description = "Libros históricos y biografías"
+                    Description = "Libros hist�ricos y biograf�as"
                 },
                 new Category
                 {
-                    Name = "Clásicos",
-                    Description = "Literatura clásica universal"
+                    Name = "Cl�sicos",
+                    Description = "Literatura cl�sica universal"
                 }
             };
 
@@ -92,25 +92,25 @@ namespace BibliotecaDevlight.Data.Seeders
                 {
                     FirstName = "George",
                     LastName = "Orwell",
-                    Biography = "Escritor y periodista británico, autor de obras críticas sobre el totalitarismo."
+                    Biography = "Escritor y periodista brit�nico, autor de obras cr�ticas sobre el totalitarismo."
                 },
                 new Author
                 {
                     FirstName = "Gabriel",
-                    LastName = "García Márquez",
-                    Biography = "Escritor colombiano, Premio Nobel de Literatura 1982, exponente del realismo mágico."
+                    LastName = "Garc�a M�rquez",
+                    Biography = "Escritor colombiano, Premio Nobel de Literatura 1982, exponente del realismo m�gico."
                 },
                 new Author
                 {
                     FirstName = "J.K.",
                     LastName = "Rowling",
-                    Biography = "Autora británica, creadora de la saga de Harry Potter."
+                    Biography = "Autora brit�nica, creadora de la saga de Harry Potter."
                 },
                 new Author
                 {
                     FirstName = "Isaac",
                     LastName = "Asimov",
-                    Biography = "Escritor y bioquímico estadounidense, maestro de la ciencia ficción."
+                    Biography = "Escritor y bioqu�mico estadounidense, maestro de la ciencia ficci�n."
                 },
                 new Author
                 {
@@ -122,25 +122,25 @@ namespace BibliotecaDevlight.Data.Seeders
                 {
                     FirstName = "Paulo",
                     LastName = "Coelho",
-                    Biography = "Escritor brasileño, uno de los autores más leídos del mundo."
+                    Biography = "Escritor brasile�o, uno de los autores m�s le�dos del mundo."
                 },
                 new Author
                 {
                     FirstName = "J.R.R.",
                     LastName = "Tolkien",
-                    Biography = "Escritor británico, filólogo y creador de la Tierra Media."
+                    Biography = "Escritor brit�nico, fil�logo y creador de la Tierra Media."
                 },
                 new Author
                 {
                     FirstName = "Miguel",
                     LastName = "de Cervantes",
-                    Biography = "Escritor español, autor de Don Quijote de la Mancha."
+                    Biography = "Escritor espa�ol, autor de Don Quijote de la Mancha."
                 },
                 new Author
                 {
                     FirstName = "Antoine",
-                    LastName = "de Saint-Exupéry",
-                    Biography = "Escritor y aviador francés, autor de El Principito."
+                    LastName = "de Saint-Exup�ry",
+                    Biography = "Escritor y aviador franc�s, autor de El Principito."
                 }
             };
 
@@ -154,29 +154,29 @@ namespace BibliotecaDevlight.Data.Seeders
                 {
                     Title = "1984",
                     ISBN = "9780451524935",
-                    Description = "Una distopía que presenta un futuro totalitario donde el Gran Hermano todo lo ve.",
+                    Description = "Una distop�a que presenta un futuro totalitario donde el Gran Hermano todo lo ve.",
                     PurchasePrice = 15.99m,
                     RentalPricePerDay = 2.50m,
                     StockPurchase = 10,
                     StockRental = 5,
                     ImageUrl = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400",
                     PublishedDate = DateTime.SpecifyKind(new DateTime(1949, 6, 8), DateTimeKind.Utc),
-                    CategoryId = categories[0].Id, // Ficción
+                    CategoryId = categories[0].Id, // Ficci�n
                     AuthorId = authors[0].Id // George Orwell
                 },
                 new Book
                 {
-                    Title = "Cien Años de Soledad",
+                    Title = "Cien A�os de Soledad",
                     ISBN = "9780307474728",
-                    Description = "La obra maestra del realismo mágico que narra la historia de la familia Buendía.",
+                    Description = "La obra maestra del realismo m�gico que narra la historia de la familia Buend�a.",
                     PurchasePrice = 18.50m,
                     RentalPricePerDay = 3.00m,
                     StockPurchase = 8,
                     StockRental = 4,
                     ImageUrl = "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400",
                     PublishedDate = DateTime.SpecifyKind(new DateTime(1967, 5, 30), DateTimeKind.Utc),
-                    CategoryId = categories[0].Id, // Ficción
-                    AuthorId = authors[1].Id // Gabriel García Márquez
+                    CategoryId = categories[0].Id, // Ficci�n
+                    AuthorId = authors[1].Id // Gabriel Garc�a M�rquez
                 },
                 new Book
                 {
@@ -189,42 +189,42 @@ namespace BibliotecaDevlight.Data.Seeders
                     StockRental = 8,
                     ImageUrl = "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400",
                     PublishedDate = DateTime.SpecifyKind(new DateTime(1997, 6, 26), DateTimeKind.Utc),
-                    CategoryId = categories[2].Id, // Fantasía
+                    CategoryId = categories[2].Id, // Fantas�a
                     AuthorId = authors[2].Id // J.K. Rowling
                 },
                 new Book
                 {
-                    Title = "Fundación",
+                    Title = "Fundaci�n",
                     ISBN = "9788497593786",
-                    Description = "Primera novela de la saga de Fundación, una obra maestra de la ciencia ficción.",
+                    Description = "Primera novela de la saga de Fundaci�n, una obra maestra de la ciencia ficci�n.",
                     PurchasePrice = 16.99m,
                     RentalPricePerDay = 2.80m,
                     StockPurchase = 7,
                     StockRental = 3,
                     ImageUrl = "https://images.unsplash.com/photo-1531976283823-ff4d70a477ab?w=400",
                     PublishedDate = DateTime.SpecifyKind(new DateTime(1951, 5, 1), DateTimeKind.Utc),
-                    CategoryId = categories[1].Id, // Ciencia Ficción
+                    CategoryId = categories[1].Id, // Ciencia Ficci�n
                     AuthorId = authors[3].Id // Isaac Asimov
                 },
                 new Book
                 {
                     Title = "Clean Code",
                     ISBN = "9780132350884",
-                    Description = "Manual de estilo para el desarrollo ágil de software. Escribe código limpio y mantenible.",
+                    Description = "Manual de estilo para el desarrollo �gil de software. Escribe c�digo limpio y mantenible.",
                     PurchasePrice = 45.00m,
                     RentalPricePerDay = 5.00m,
                     StockPurchase = 12,
                     StockRental = 6,
                     ImageUrl = "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=400",
                     PublishedDate = DateTime.SpecifyKind(new DateTime(2008, 8, 1), DateTimeKind.Utc),
-                    CategoryId = categories[3].Id, // Tecnología
+                    CategoryId = categories[3].Id, // Tecnolog�a
                     AuthorId = authors[4].Id // Robert Martin
                 },
                 new Book
                 {
                     Title = "El Alquimista",
                     ISBN = "9780062315007",
-                    Description = "Una fábula sobre seguir tus sueños y escuchar a tu corazón.",
+                    Description = "Una f�bula sobre seguir tus sue�os y escuchar a tu coraz�n.",
                     PurchasePrice = 14.99m,
                     RentalPricePerDay = 2.00m,
                     StockPurchase = 20,
@@ -236,58 +236,58 @@ namespace BibliotecaDevlight.Data.Seeders
                 },
                 new Book
                 {
-                    Title = "El Señor de los Anillos: La Comunidad del Anillo",
+                    Title = "El Se�or de los Anillos: La Comunidad del Anillo",
                     ISBN = "9788445077528",
-                    Description = "Primera parte de la épica trilogía que narra la búsqueda para destruir el Anillo Único.",
+                    Description = "Primera parte de la �pica trilog�a que narra la b�squeda para destruir el Anillo �nico.",
                     PurchasePrice = 22.00m,
                     RentalPricePerDay = 4.00m,
                     StockPurchase = 10,
                     StockRental = 5,
                     ImageUrl = "https://images.unsplash.com/photo-1589998059171-988d887df646?w=400",
                     PublishedDate = DateTime.SpecifyKind(new DateTime(1954, 7, 29), DateTimeKind.Utc),
-                    CategoryId = categories[2].Id, // Fantasía
+                    CategoryId = categories[2].Id, // Fantas�a
                     AuthorId = authors[6].Id // J.R.R. Tolkien
                 },
                 new Book
                 {
                     Title = "Don Quijote de la Mancha",
                     ISBN = "9788424936419",
-                    Description = "La obra cumbre de la literatura española y una de las más importantes de la literatura universal.",
+                    Description = "La obra cumbre de la literatura espa�ola y una de las m�s importantes de la literatura universal.",
                     PurchasePrice = 25.00m,
                     RentalPricePerDay = 3.50m,
                     StockPurchase = 6,
                     StockRental = 3,
                     ImageUrl = "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400",
                     PublishedDate = DateTime.SpecifyKind(new DateTime(1605, 1, 16), DateTimeKind.Utc),
-                    CategoryId = categories[6].Id, // Clásicos
+                    CategoryId = categories[6].Id, // Cl�sicos
                     AuthorId = authors[7].Id // Miguel de Cervantes
                 },
                 new Book
                 {
                     Title = "El Principito",
                     ISBN = "9788478887194",
-                    Description = "Un cuento poético que trata temas profundos como el sentido de la vida y la amistad.",
+                    Description = "Un cuento po�tico que trata temas profundos como el sentido de la vida y la amistad.",
                     PurchasePrice = 12.99m,
                     RentalPricePerDay = 1.50m,
                     StockPurchase = 25,
                     StockRental = 12,
                     ImageUrl = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400",
                     PublishedDate = DateTime.SpecifyKind(new DateTime(1943, 4, 6), DateTimeKind.Utc),
-                    CategoryId = categories[6].Id, // Clásicos
-                    AuthorId = authors[8].Id // Antoine de Saint-Exupéry
+                    CategoryId = categories[6].Id, // Cl�sicos
+                    AuthorId = authors[8].Id // Antoine de Saint-Exup�ry
                 },
                 new Book
                 {
                     Title = "Yo, Robot",
                     ISBN = "9788435006057",
-                    Description = "Colección de relatos sobre robots y las tres leyes de la robótica.",
+                    Description = "Colecci�n de relatos sobre robots y las tres leyes de la rob�tica.",
                     PurchasePrice = 14.50m,
                     RentalPricePerDay = 2.30m,
                     StockPurchase = 9,
                     StockRental = 4,
                     ImageUrl = "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400",
                     PublishedDate = DateTime.SpecifyKind(new DateTime(1950, 12, 2), DateTimeKind.Utc),
-                    CategoryId = categories[1].Id, // Ciencia Ficción
+                    CategoryId = categories[1].Id, // Ciencia Ficci�n
                     AuthorId = authors[3].Id // Isaac Asimov
                 }
             };

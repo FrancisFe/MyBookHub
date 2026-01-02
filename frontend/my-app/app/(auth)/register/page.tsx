@@ -48,7 +48,7 @@ export default function RegisterPage() {
             Crear Cuenta
           </h1>
           <p className="text-gray-400 text-sm">
-            Únete a la comunidad de Books Devlights
+            Únete a la comunidad de MyBookHub
           </p>
         </div>
 

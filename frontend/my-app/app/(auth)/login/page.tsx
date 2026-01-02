@@ -46,7 +46,7 @@ const handleSubmit = async (e: React.FormEvent) => {
             Iniciar Sesión
           </h1>
           <p className="text-gray-400 text-sm">
-            Accede a tu cuenta de Books Devlights
+            Accede a tu cuenta de MyBookHub
           </p>
         </div>
 
